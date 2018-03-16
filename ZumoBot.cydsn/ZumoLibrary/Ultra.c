@@ -73,7 +73,6 @@ CY_ISR(ultra_isr_handler)
             }
             prev = now;
             ovf = 0;
-            Pin_1_Write(!Pin_1_Read());
         }
         if(status & Timer_STATUS_TC) {
             ++ovf; // used to count overly long pulses

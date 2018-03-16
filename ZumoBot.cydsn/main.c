@@ -118,9 +118,10 @@ int main()
         if(SW1_Read() == 0) {
             led = !led;
             BatteryLed_Write(led);
+            ShieldLed_Write(led);
             if(led) printf("Led is ON\n");
             else printf("Led is OFF\n");
-            
+            Beep(1000, 150);
             while(SW1_Read() == 0) CyDelay(10); // wait while button is being pressed
         }        
     }
