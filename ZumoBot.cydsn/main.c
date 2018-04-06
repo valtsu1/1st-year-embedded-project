@@ -76,15 +76,19 @@ int main()
 
     for(;;)
     {
-        
+        BatteryLed_Write(0);
+        CyDelay(200);
         ADC_Battery_StartConvert();
         if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for get ADC converted value
             adcresult = ADC_Battery_GetResult16(); // get the ADC value (0 - 4095)
             // convert value to Volts
             // you need to implement the conversion
-            
+            volts = ((adcresult / 4095.0) * 5)*1.5;
             // Print both ADC results and converted value
             printf("%d %f\r\n",adcresult, volts);
+            if (volts < 4){
+                BatteryLed_Write(1);
+            }
         }
         CyDelay(500);
         
