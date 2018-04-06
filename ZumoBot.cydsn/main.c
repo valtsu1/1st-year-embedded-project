@@ -51,6 +51,14 @@ int rread(void);
  * @brief   
  * @details  ** Enable global interrupt since Zumo library uses interrupts. **<br>&nbsp;&nbsp;&nbsp;CyGlobalIntEnable;<br>
 */
+void forward(uint8 speed,uint32 delay)
+{
+    MotorDirLeft_Write(0);      // set LeftMotor forward mode
+    MotorDirRight_Write(0);     // set RightMotor forward mode
+    PWM_WriteCompare1(speed-6.7); 
+    PWM_WriteCompare2(speed); 
+    CyDelay(delay);
+}
 
 #if 0
 //battery level//
@@ -228,14 +236,14 @@ int main()
     
     motor_start();
 
-    motor_forward(255,1650);    
+    forward(255,1650);    
     motor_turn(150,0,750);   
-    motor_forward(255,1300); 
+    forward(255,1300); 
     motor_turn(150,0,750);   
-    motor_forward(255,1250);
+    forward(255,1250);
     motor_turn(150,0,750);
     motor_turn(200,100,1800);
-    motor_forward(255,450);
+    forward(255,450);
            
     motor_stop();               // motor stop
     
