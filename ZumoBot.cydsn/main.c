@@ -221,8 +221,12 @@ int main()
         //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
         
         
-        //suoraan
-        if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
+        //stop
+        if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0)){
+            motor_forward(0,0);
+        }
+       //suoraan
+        else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
             motor_forward(155,10);
         }
         
@@ -242,12 +246,10 @@ int main()
         }
         
         //jyrkkä oikea
-        else if((dig.r3 == 1 && dig.r2 == 1 && dig.r1 == 0) || (dig.r3 == 1 && dig.r2 == 0 && dig.r1 == 0)) {
+        else if((dig.r3 == 1 && dig.r2 == 1 && dig.r1 == 0) || (dig.r3 == 1 && dig.r2 == 0 && dig.r1 == 0) || (dig.r3 == 0)) {
             motor_turn(200,10,10);
         }
-        else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0)){
-            motor_forward(0,0);
-        }
+        
         
         
     }
