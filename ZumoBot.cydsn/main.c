@@ -212,7 +212,7 @@ int main()
     for(;;)
     {
         // read raw sensor values
-        reflectance_read(&ref);
+        //reflectance_read(&ref);
         //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
         
         // read digital values that are based on threshold. 0 = white, 1 = black
@@ -223,32 +223,32 @@ int main()
         
         //stop
         if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0)){
-            motor_forward(0,0);
+            forward(0,100);
         }
        //suoraan
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
-            motor_forward(155,10);
+            forward(220,5);
+        }
+        //jyrkkä vasen
+        else if(dig.l3 == 1) {
+                motor_turn(0,220,5);
+        }
+        
+        //jyrkkä oikea
+        else if(dig.r3 == 1) {
+            motor_turn(220,0,5);
         }
         
         //vasemmalle
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-            motor_turn(100,155,10);
+            motor_turn(160,180,5);
         }
         
         //oikealle
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(155,100,10);
+            motor_turn(180,160,5);
         }
         
-        //jyrkkä vasen
-        else if((dig.l3 == 1 && dig.l2 == 1 && dig.l1 == 0) || (dig.l3 == 1 && dig.l2 == 0 && dig.l1 == 0)) {
-            motor_turn(10,200,10);
-        }
-        
-        //jyrkkä oikea
-        else if((dig.r3 == 1 && dig.r2 == 1 && dig.r1 == 0) || (dig.r3 == 1 && dig.r2 == 0 && dig.r1 == 0) || (dig.r3 == 0)) {
-            motor_turn(200,10,10);
-        }
         
         
         
