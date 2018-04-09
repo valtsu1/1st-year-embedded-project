@@ -192,7 +192,7 @@ int main()
 #endif
 
 
-#if 0
+#if 1
 //reflectance//
 int main()
 {
@@ -225,7 +225,7 @@ int main()
 #endif
 
 
-#if 1
+#if 0
 //motor//
 int main()
 {
