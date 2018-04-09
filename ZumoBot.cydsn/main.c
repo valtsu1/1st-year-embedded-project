@@ -220,31 +220,30 @@ int main()
         reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance period
         //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
         
-        CyDelay(200);
         
         //suoraan
         if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0) || (dig.r1 == 1 && dig.l1 == 0)) {
-            motor_forward(155,200);
+            motor_forward(155,10);
         }
         
         //vasemmalle
         if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0)) {
-            motor_turn(155,100,200);
+            motor_turn(155,100,10);
         }
         
         //oikealle
         if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0)) {
-            motor_turn(100,155,200);
+            motor_turn(100,155,10);
         }
         
         //jyrkkä vasen
         if((dig.l3 == 1 && dig.l2 == 1 && dig.l1 == 0)) {
-            motor_turn(155,10,200);
+            motor_turn(155,10,10);
         }
         
         //jyrkkä oikea
         if((dig.r3 == 1 && dig.r2 == 1 && dig.r1 == 0)) {
-            motor_turn(10,155,200);
+            motor_turn(10,155,10);
         }
         else{
             motor_forward(0,0);
