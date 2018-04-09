@@ -222,8 +222,12 @@ int main()
         
         CyDelay(200);
         
-        while(dig.l1 = 1 && dig.r1 = 1 && dig.l2 = 0 && dig.l3 = 0 && dig.r2 = 0 && dig.r3 = 0 || dig.l1 = 1 && dig.r1 = 0 || dig.r1 = 1 && dig.l1 = 0) {
-            forward(155);
+        if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0) || (dig.r1 == 1 && dig.l1 == 0)) {
+            motor_start();
+            forward(155,500);
+        }
+        else{
+            motor_stop();
         }
         
         
