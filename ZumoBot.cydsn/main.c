@@ -199,8 +199,8 @@ int main()
     struct sensors_ ref;
     struct sensors_ dig;
 
-    motor_start();
     Systick_Start();
+     motor_start();
 
     CyGlobalIntEnable; 
     UART_1_Start();
@@ -222,12 +222,32 @@ int main()
         
         CyDelay(200);
         
+        //suoraan
         if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0) || (dig.r1 == 1 && dig.l1 == 0)) {
-            motor_start();
-            forward(155,500);
+            motor_forward(155,200);
+        }
+        
+        //vasemmalle
+        if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0)) {
+            motor_turn(155,100,200);
+        }
+        
+        //oikealle
+        if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0)) {
+            motor_turn(100,155,200);
+        }
+        
+        //jyrkkä vasen
+        if((dig.l3 == 1 && dig.l2 == 1 && dig.l1 == 0)) {
+            motor_turn(155,10,200);
+        }
+        
+        //jyrkkä oikea
+        if((dig.r3 == 1 && dig.r2 == 1 && dig.r1 == 0)) {
+            motor_turn(10,155,200);
         }
         else{
-            motor_stop();
+            motor_forward(0,0);
         }
         
         
