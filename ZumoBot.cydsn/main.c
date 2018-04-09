@@ -228,24 +228,24 @@ int main()
         
         //vasemmalle
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-            motor_turn(155,100,10);
+            motor_turn(100,155,10);
         }
         
         //oikealle
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(100,155,10);
+            motor_turn(155,100,10);
         }
         
         //jyrkkä vasen
         else if((dig.l3 == 1 && dig.l2 == 1 && dig.l1 == 0) || (dig.l3 == 1 && dig.l2 == 0 && dig.l1 == 0)) {
-            motor_turn(155,10,10);
+            motor_turn(10,200,10);
         }
         
         //jyrkkä oikea
         else if((dig.r3 == 1 && dig.r2 == 1 && dig.r1 == 0) || (dig.r3 == 1 && dig.r2 == 0 && dig.r1 == 0)) {
-            motor_turn(10,155,10);
+            motor_turn(200,10,10);
         }
-        else{
+        else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0)){
             motor_forward(0,0);
         }
         
