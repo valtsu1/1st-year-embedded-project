@@ -192,13 +192,14 @@ int main()
 #endif
 
 
-#if 0
+#if 1
 //reflectance//
 int main()
 {
     struct sensors_ ref;
     struct sensors_ dig;
 
+    motor_start();
     Systick_Start();
 
     CyGlobalIntEnable; 
@@ -212,20 +213,26 @@ int main()
     {
         // read raw sensor values
         reflectance_read(&ref);
-        printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
+        //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
         
         // read digital values that are based on threshold. 0 = white, 1 = black
         // when blackness value is over threshold the sensors reads 1, otherwise 0
         reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance period
-        printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
+        //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
         
         CyDelay(200);
+        
+        while(dig.l1 = 1 && dig.r1 = 1 && dig.l2 = 0 && dig.l3 = 0 && dig.r2 = 0 && dig.r3 = 0 || dig.l1 = 1 && dig.r1 = 0 || dig.r1 = 1 && dig.l1 = 0) {
+            forward(155);
+        }
+        
+        
     }
 }   
 #endif
 
 
-#if 1
+#if 0
 //motor//
 int main()
 {
