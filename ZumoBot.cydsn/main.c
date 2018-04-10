@@ -70,22 +70,21 @@ int main()
     
     ADC_Battery_Start();        
 
-    int16 adcresult =0;
+    int16 adcresult = 0;
     float volts = 0.0;
 
     printf("\nBoot\n");
-
+    int aika;
     //BatteryLed_Write(1); // Switch led on 
-    BatteryLed_Write(0); // Switch led off 
+    //BatteryLed_Write(0); // Switch led off 
     //uint8 button;
     //button = SW1_Read(); // read SW1 on pSoC board
     // SW1_Read() returns zero when button is pressed
     // SW1_Read() returns one when button is not pressed
 
-    for(;;)
-    {
+    aika = GetTicks();
+    if (aika > 10000){
         BatteryLed_Write(0);
-        CyDelay(200);
         ADC_Battery_StartConvert();
         if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for get ADC converted value
             adcresult = ADC_Battery_GetResult16(); // get the ADC value (0 - 4095)
@@ -98,8 +97,7 @@ int main()
                 BatteryLed_Write(1);
             }
         }
-        CyDelay(500);
-        
+    aika = 0;  
     }
  }   
 #endif
@@ -195,22 +193,51 @@ int main()
 //reflectance//
 int main()
 {
-    struct sensors_ ref;
+    //struct sensors_ ref;
     struct sensors_ dig;
-
+    
     Systick_Start();
-     motor_start();
-    int suunta = 10;
+    motor_start();
+    
 
     CyGlobalIntEnable; 
     UART_1_Start();
+    ADC_Battery_Start();        
+
+    int16 adcresult = 0;
+    float volts = 0.0;
+    
+    int suunta = 10;
+    int time; 
+    int check = 10000;
   
     reflectance_start();
-    reflectance_set_threshold(9000, 9000, 11000, 11000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
-    
+    reflectance_set_threshold(9000, 9000, 10000, 10000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
 
     for(;;)
     {
+    
+    time = GetTicks();
+    
+    //tarkastaa 10s välein onko pattereissa yli neljä volttia ja sytyttää ledin jos alle
+    if (time > check){
+        ADC_Battery_StartConvert();
+        if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for get ADC converted value
+            adcresult = ADC_Battery_GetResult16(); // get the ADC value (0 - 4095)
+            // convert value to Volts
+            // you need to implement the conversion
+            volts = ((adcresult / 4095.0) * 5) * 1.5;
+
+            if (volts < 4){
+                BatteryLed_Write(1);
+            }
+        }
+    check += time;  
+    }
+    
+
+
+    
         // read raw sensor values
         //reflectance_read(&ref);
         //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
@@ -221,7 +248,7 @@ int main()
         //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
         
         
-        //stop
+        //stop (suunta pitää olla 0)
         if ((dig.l1 == 1 && dig.l2 == 1 && dig.l3 == 1 && dig.r1 == 1 && dig.r2 == 1 && dig.r3 == 1)){
             suunta = 0;
         }
@@ -240,33 +267,33 @@ int main()
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 2){
             motor_turn(255,10,10);
         }
-       //suoraan
+       //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
             forward(255,5);
             suunta = 0;
         }
         //jyrkkä vasen
         else if(dig.l3 == 1) {
-                motor_turn(15,255,5);
+                motor_turn(10,255,10);
                 suunta = 1;
                 
         }
         
         //jyrkkä oikea
         else if(dig.r3 == 1) {
-            motor_turn(255,15,5);
+            motor_turn(255,10,10);
             suunta = 2;
         }
         
-        //vasemmalle
+        //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-            motor_turn(245,255,15);
+            motor_turn(245,255,50);
             suunta = 0;
         }
         
-        //oikealle
+        //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(255,245,15);
+            motor_turn(255,245,50);
             suunta = 0;
         }
         
