@@ -225,14 +225,18 @@ int main()
         if ((dig.l1 == 1 && dig.l2 == 1 && dig.l3 == 1 && dig.r1 == 1 && dig.r2 == 1 && dig.r3 == 1)){
             suunta = 0;
         }
+        
+        //jos suunta 0 ja sensorit näkevät vain valkoista
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 0){
             forward(0,100);
         }
         
+        //jos sensorit näkevät vain valkoista ja suunta 1
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1){
             motor_turn(10,255,10);
         }
         
+        //jos sensorit näkevät vain valkoista ja suunta 2 
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 2){
             motor_turn(255,10,10);
         }
