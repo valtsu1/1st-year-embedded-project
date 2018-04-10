@@ -189,7 +189,7 @@ int main()
  }   
 #endif
 
-#if 1
+#if 1 
 //reflectance//
 int main()
 {
@@ -237,7 +237,7 @@ int main()
     
 
 
-    
+        //vasemman moottorin heitto on -6.7
         // read raw sensor values
         //reflectance_read(&ref);
         //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
@@ -255,7 +255,7 @@ int main()
         
         //jos suunta 0 ja sensorit näkevät vain valkoista
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 0){
-            forward(0,100);
+            motor_forward(0,100);
         }
         
         //jos sensorit näkevät vain valkoista ja suunta 1
@@ -265,7 +265,7 @@ int main()
         
         //jos sensorit näkevät vain valkoista ja suunta 2 
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 2){
-            motor_turn(255,10,10);
+            motor_turn(255,17,10);
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
@@ -281,19 +281,19 @@ int main()
         
         //jyrkkä oikea
         else if(dig.r3 == 1) {
-            motor_turn(255,10,10);
+            motor_turn(255,17,10);
             suunta = 2;
         }
         
         //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-            motor_turn(245,255,50);
+            motor_turn(238,255,50);
             suunta = 0;
         }
         
         //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(255,245,50);
+            motor_turn(255,252,50);
             suunta = 0;
         }
         
