@@ -248,7 +248,7 @@ int main()
         //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
         
         
-        //stop (suunta pitää olla 0)
+        //jos kaikki sensorit näkevät mustaa, asettaa sunnaksi 0
         if ((dig.l1 == 1 && dig.l2 == 1 && dig.l3 == 1 && dig.r1 == 1 && dig.r2 == 1 && dig.r3 == 1)){
             suunta = 0;
         }
