@@ -191,8 +191,89 @@ int main()
  }   
 #endif
 
-
 #if 1
+//reflectance//
+int main()
+{
+    struct sensors_ ref;
+    struct sensors_ dig;
+
+    Systick_Start();
+     motor_start();
+    int suunta = 10;
+
+    CyGlobalIntEnable; 
+    UART_1_Start();
+  
+    reflectance_start();
+    reflectance_set_threshold(9000, 9000, 11000, 11000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
+    
+
+    for(;;)
+    {
+        // read raw sensor values
+        //reflectance_read(&ref);
+        //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
+        
+        // read digital values that are based on threshold. 0 = white, 1 = black
+        // when blackness value is over threshold the sensors reads 1, otherwise 0
+        reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance period
+        //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
+        
+        
+        //stop
+        if ((dig.l1 == 1 && dig.l2 == 1 && dig.l3 == 1 && dig.r1 == 1 && dig.r2 == 1 && dig.r3 == 1)){
+            suunta = 0;
+        }
+        else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 0){
+            forward(0,100);
+        }
+        
+        else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1){
+            motor_turn(10,255,10);
+        }
+        
+        else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 2){
+            motor_turn(255,10,10);
+        }
+       //suoraan
+        else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
+            forward(255,5);
+            suunta = 0;
+        }
+        //jyrkkä vasen
+        else if(dig.l3 == 1) {
+                motor_turn(15,255,5);
+                suunta = 1;
+                
+        }
+        
+        //jyrkkä oikea
+        else if(dig.r3 == 1) {
+            motor_turn(255,15,5);
+            suunta = 2;
+        }
+        
+        //vasemmalle
+       else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
+            motor_turn(245,255,15);
+            suunta = 0;
+        }
+        
+        //oikealle
+        else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
+            motor_turn(255,245,15);
+            suunta = 0;
+        }
+        
+        
+        
+        
+    }
+}   
+#endif
+
+#if 0
 //reflectance//
 int main()
 {
