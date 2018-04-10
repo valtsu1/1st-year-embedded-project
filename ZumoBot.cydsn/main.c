@@ -198,7 +198,7 @@ int main()
     
     Systick_Start();
     motor_start();
-    
+    motor_forward(0,100);
 
     CyGlobalIntEnable; 
     UART_1_Start();
@@ -208,8 +208,8 @@ int main()
     float volts = 0.0;
     
     int suunta = 10;
-    int time; 
-    int check = 10000;
+    long int time; 
+    long int check = 10000;
   
     reflectance_start();
     reflectance_set_threshold(9000, 9000, 10000, 10000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
