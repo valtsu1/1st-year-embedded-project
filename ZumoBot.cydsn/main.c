@@ -60,10 +60,6 @@ void forward(uint8 speed,uint32 delay)
     CyDelay(delay);
 }
 
-<<<<<<< HEAD
-void counter(){
-    
-=======
 int lines(int left, int right) {
     static int check;
     static int fakeBoolean;
@@ -76,7 +72,6 @@ int lines(int left, int right) {
         fakeBoolean = 0;
     }
     return check;
->>>>>>> 1705f5755cab1f7301c64dfb209f3164f356aafc
 }
 
 #if 0
@@ -278,7 +273,7 @@ int main()
                 stop++;
             }
         }*/
-
+        
         //jos suunta 0 ja sensorit näkevät vain valkoista
         //else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta ==// 0){
         /*
@@ -297,15 +292,7 @@ int main()
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-            forward(200,5);
-=======
-            forward(255,2);
->>>>>>> 1705f5755cab1f7301c64dfb209f3164f356aafc
-=======
             forward(255,10);
->>>>>>> 101efceed91f882a492b1b1823308cf14897994b
             suunta = 0;
         }
         //jyrkkä vasen
@@ -331,14 +318,7 @@ int main()
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
             motor_turn(255,237,10);
             suunta = 2;
-<<<<<<< HEAD
-        }
-
-        
-        
-=======
         }    
->>>>>>> 1705f5755cab1f7301c64dfb209f3164f356aafc
     }
 }   
 #endif
