@@ -60,8 +60,22 @@ void forward(uint8 speed,uint32 delay)
     CyDelay(delay);
 }
 
+<<<<<<< HEAD
 void counter(){
     
+=======
+int lines(int left, int right) {
+    int check = 0;
+    int fakeBoolean = 0;
+    if(left == 1 && right == 1) {
+        fakeBoolean = 1;
+    }
+    if(fakeBoolean == 1 && left == 0 && right == 0) {
+        check++;
+        fakeBoolean = 0;
+    }
+    return check;
+>>>>>>> 1705f5755cab1f7301c64dfb209f3164f356aafc
 }
 
 #if 0
@@ -213,7 +227,7 @@ int main()
     
     int suunta = 10;
     int stop = 0;
-    long int time; 
+    long int time = 0; 
     long int check = 10000;
   
     reflectance_start();
@@ -221,8 +235,6 @@ int main()
 
     for(;;)
     {
-    
-    time = GetTicks();
     
     //tarkastaa 10s välein onko pattereissa yli neljä volttia ja sytyttää ledin jos alle
     if (time > check){
@@ -252,6 +264,11 @@ int main()
         reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance period
         //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
         
+        stop = stop + lines(dig.l3, dig.r3);
+        time = GetTicks();
+        if(stop >= 3) {
+            motor_stop();
+        }
         
         //jos kaikki sensorit näkevät mustaa, asettaa sunnaksi 0
         /*while ((dig.l3 == 1 && dig.r3 == 1)){
@@ -270,45 +287,53 @@ int main()
         
         //jos sensorit näkevät vain valkoista ja suunta 1
         if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1){
-            motor_turn(0,255,5);
+            motor_turn(0,255,4);
         }
         
         //jos sensorit näkevät vain valkoista ja suunta 2 
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 2){
-            motor_turn(255,0,5);
+            motor_turn(255,0,4);
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
+<<<<<<< HEAD
             forward(200,5);
+=======
+            forward(255,2);
+>>>>>>> 1705f5755cab1f7301c64dfb209f3164f356aafc
             suunta = 0;
         }
         //jyrkkä vasen
         else if(dig.l3 == 1) {
-                motor_turn(10,255,5);
+                motor_turn(4,255,2);
                 suunta = 1;
                 
         }
         
         //jyrkkä oikea
         else if(dig.r3 == 1) {
-            motor_turn(255,17,5);
+            motor_turn(255,10,2);
             suunta = 2;
         }
         
         //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-            motor_turn(180,200,10);
+            motor_turn(193,230,5);
             suunta = 1;
         }
         
         //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(200,180,10);
+            motor_turn(230,200,5);
             suunta = 2;
+<<<<<<< HEAD
         }
 
         
         
+=======
+        }    
+>>>>>>> 1705f5755cab1f7301c64dfb209f3164f356aafc
     }
 }   
 #endif
