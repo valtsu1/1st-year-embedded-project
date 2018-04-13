@@ -293,21 +293,13 @@ int main()
         
         //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-<<<<<<< HEAD
             motor_turn(218,255,10);
-=======
-            motor_turn(180,200,10);
->>>>>>> 04dda31d0ef7579e5b806e4824e76984bce6bf8e
             suunta = 1;
         }
         
         //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-<<<<<<< HEAD
             motor_turn(255,225,10);
-=======
-            motor_turn(200,180,10);
->>>>>>> 04dda31d0ef7579e5b806e4824e76984bce6bf8e
             suunta = 2;
         }
         
