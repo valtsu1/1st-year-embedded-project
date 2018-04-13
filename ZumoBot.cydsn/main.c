@@ -260,12 +260,12 @@ int main()
         
         //jos sensorit näkevät vain valkoista ja suunta 1
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1){
-            motor_turn(10,255,10);
+            motor_turn(10,255,5);
         }
         
         //jos sensorit näkevät vain valkoista ja suunta 2 
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 2){
-            motor_turn(255,17,10);
+            motor_turn(255,17,5);
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
@@ -274,26 +274,26 @@ int main()
         }
         //jyrkkä vasen
         else if(dig.l3 == 1) {
-                motor_turn(10,255,10);
+                motor_turn(15,255,10);
                 suunta = 1;
                 
         }
         
         //jyrkkä oikea
         else if(dig.r3 == 1) {
-            motor_turn(255,17,10);
+            motor_turn(255,22,5);
             suunta = 2;
         }
         
         //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-            motor_turn(238,255,50);
+            motor_turn(228,255,10);
             suunta = 0;
         }
         
         //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(255,252,50);
+            motor_turn(255,242,10);
             suunta = 0;
         }
         
