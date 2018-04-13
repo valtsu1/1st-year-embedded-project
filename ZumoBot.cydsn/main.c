@@ -208,11 +208,12 @@ int main()
     float volts = 0.0;
     
     int suunta = 10;
+    int stop = 0;
     long int time; 
     long int check = 10000;
   
     reflectance_start();
-    reflectance_set_threshold(9000, 9000, 10000, 10000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
+    reflectance_set_threshold(9000, 9000, 11000, 11000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
 
     for(;;)
     {
@@ -249,23 +250,28 @@ int main()
         
         
         //jos kaikki sensorit näkevät mustaa, asettaa sunnaksi 0
-        if ((dig.l1 == 1 && dig.l2 == 1 && dig.l3 == 1 && dig.r1 == 1 && dig.r2 == 1 && dig.r3 == 1)){
-            suunta = 0;
-        }
+        /*while ((dig.l3 == 1 && dig.r3 == 1)){
+            forward(255,10);
+            if((dig.l3 == 0 && dig.r3 == 0)) {
+                stop++;
+            }
+        }*/
         
         //jos suunta 0 ja sensorit näkevät vain valkoista
-        else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 0){
+        //else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta ==// 0){
+        /*
+        if((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1 && stop >= 3 && suunta == 0) {
             motor_forward(0,100);
-        }
+        }*/
         
         //jos sensorit näkevät vain valkoista ja suunta 1
-        else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1){
-            motor_turn(10,255,5);
+        if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1){
+            motor_turn(0,255,5);
         }
         
         //jos sensorit näkevät vain valkoista ja suunta 2 
         else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 2){
-            motor_turn(255,17,5);
+            motor_turn(255,0,5);
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
@@ -274,27 +280,27 @@ int main()
         }
         //jyrkkä vasen
         else if(dig.l3 == 1) {
-                motor_turn(15,255,10);
+                motor_turn(10,255,5);
                 suunta = 1;
                 
         }
         
         //jyrkkä oikea
         else if(dig.r3 == 1) {
-            motor_turn(255,22,5);
+            motor_turn(255,17,5);
             suunta = 2;
         }
         
         //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
             motor_turn(228,255,10);
-            suunta = 0;
+            suunta = 1;
         }
         
         //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(255,242,10);
-            suunta = 0;
+            motor_turn(255,235,10);
+            suunta = 2;
         }
         
         
