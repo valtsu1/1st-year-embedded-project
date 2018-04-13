@@ -60,6 +60,10 @@ void forward(uint8 speed,uint32 delay)
     CyDelay(delay);
 }
 
+void counter(){
+    
+}
+
 #if 0
 //battery level//
 int main()
@@ -256,7 +260,7 @@ int main()
                 stop++;
             }
         }*/
-        
+
         //jos suunta 0 ja sensorit näkevät vain valkoista
         //else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta ==// 0){
         /*
@@ -275,7 +279,7 @@ int main()
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
-            forward(127,5);
+            forward(200,5);
             suunta = 0;
         }
         //jyrkkä vasen
@@ -302,16 +306,7 @@ int main()
             motor_turn(200,180,10);
             suunta = 2;
         }
-        
-        if ((dig.l3 == 1) && (dig.r3 == 1)){
-            if((dig.l3 == 0) && (dig.r3 == 0)){
-                stop++;
-            }
-        }
-        
-        if(stop == 3){
-            motor_stop();
-        }
+
         
         
     }
