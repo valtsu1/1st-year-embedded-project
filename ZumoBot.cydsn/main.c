@@ -60,6 +60,19 @@ void forward(uint8 speed,uint32 delay)
     CyDelay(delay);
 }
 
+int lines(int left, int right) {
+    int check = 0;
+    int fakeBoolean = 0;
+    if(left == 1 && right == 1) {
+        fakeBoolean = 1;
+    }
+    if(fakeBoolean == 1 && left == 0 && right == 0) {
+        check++;
+        fakeBoolean = 0;
+    }
+    return check;
+}
+
 #if 0
 //battery level//
 int main()
@@ -217,9 +230,11 @@ int main()
 
     for(;;)
     {
-    
+    stop = lines(dig.l3, dig.r3);
     time = GetTicks();
-    
+    if(stop >= 3) {
+        motor_stop();
+    }
     //tarkastaa 10s välein onko pattereissa yli neljä volttia ja sytyttää ledin jos alle
     if (time > check){
         ADC_Battery_StartConvert();
@@ -301,19 +316,7 @@ int main()
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
             motor_turn(255,225,10);
             suunta = 2;
-        }
-        
-        if ((dig.l3 == 1) && (dig.r3 == 1)){
-            if((dig.l3 == 0) && (dig.r3 == 0)){
-                stop++;
-            }
-        }
-        
-        if(stop == 3){
-            motor_stop();
-        }
-        
-        
+        }    
     }
 }   
 #endif
