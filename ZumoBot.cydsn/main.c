@@ -227,6 +227,7 @@ int main()
     Systick_Start();
     motor_start();
     motor_forward(0,100);
+    IR_Start();
 
     CyGlobalIntEnable; 
     UART_1_Start();
@@ -235,16 +236,34 @@ int main()
     //int16 adcresult = 0;
     //float volts = 0.0;
     
+    
+    
     int suunta = 10;
     int stop = 0;
     //long int time = 0; 
     //long int check = 10000;
-  
+    int start = 0;
     reflectance_start();
-    reflectance_set_threshold(8000, 10000, 11000, 11000, 10000, 8000); // set center sensor threshold to 11000 and others to 9000
+    reflectance_set_threshold(8000, 9000, 11000, 11000, 9000, 8000); // set center sensor threshold to 11000 and others to 9000
+    
+    
+    while(start != 1) {
+        reflectance_digital(&dig);
+        motor_forward(50,5);
+        if(dig.l3 == 1 && dig.r3 == 1) {
+            start = 1;
+        }
+    }
+    motor_forward(0,100);
+    IR_flush();
+    IR_wait();
 
     for(;;)
     {
+        
+    MotorDirLeft_Write(0);      // set LeftMotor forward mode
+    MotorDirRight_Write(0);
+                
     left1 = 0;
     left2 = 0;
     left3 = 0;
@@ -336,7 +355,7 @@ int main()
 
             MotorDirLeft_Write(1);      // set LeftMotor forward mode
                 MotorDirRight_Write(0);     // set RightMotor forward mode
-                PWM_WriteCompare1(2); 
+                PWM_WriteCompare1(1); 
                 PWM_WriteCompare2(255); 
                 CyDelay(4);
         }
@@ -352,13 +371,13 @@ int main()
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((left1 == 1 && right1 == 1 && left2 == 0 && left3 == 0 && right2 == 0 && right3 == 0 )|| (left1 == 1 && right1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0) || (right1 == 1 && left1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0)) {
-            forward(255,4);
+            forward(255,10);
             suunta = 0;
         }
         //jyrkkä vasen
         else if(left3 == 1) {
                 //motor_turn(5,255,4);
-                motor_turn(100,255,4);
+                motor_turn(20,255,4);
 
                 
                 suunta = 1;
@@ -368,7 +387,7 @@ int main()
         //jyrkkä oikea
         else if(right3 == 1) {
             //motor_turn(255,5,4);
-            motor_turn(255,100,4);
+            motor_turn(255,20,4);
             suunta = 2;
         }
         
