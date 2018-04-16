@@ -257,7 +257,7 @@ int main()
     motor_forward(0,100);
     IR_flush();
     IR_wait();
-    motor_forward(230,15);
+    motor_forward(240,15);
     
     for(;;)
     {
@@ -356,9 +356,9 @@ int main()
 
             MotorDirLeft_Write(1);      // set LeftMotor forward mode
                 MotorDirRight_Write(0);     // set RightMotor forward mode
-                PWM_WriteCompare1(14); 
+                PWM_WriteCompare1(50); 
                 PWM_WriteCompare2(255); 
-                CyDelay(10);
+                CyDelay(3);
         }
         
         //jos sensorit näkevät vain valkoista ja suunta 2 
@@ -367,8 +367,8 @@ int main()
             MotorDirLeft_Write(0);      // set LeftMotor forward mode
                 MotorDirRight_Write(1);     // set RightMotor forward mode
                 PWM_WriteCompare1(255); 
-                PWM_WriteCompare2(17); 
-                CyDelay(10);
+                PWM_WriteCompare2(50); 
+                CyDelay(3);
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((left1 == 1 && right1 == 1 && left2 == 0 && left3 == 0 && right2 == 0 && right3 == 0 )|| (left1 == 1 && right1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0) || (right1 == 1 && left1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0)) {
@@ -378,7 +378,7 @@ int main()
         //jyrkkä vasen
         else if(left3 == 1) {
                 //motor_turn(5,255,4);
-                motor_turn(13,255,10);
+                motor_turn(13,255,5);
 
                 
                 suunta = 1;
@@ -388,19 +388,19 @@ int main()
         //jyrkkä oikea
         else if(right3 == 1) {
             //motor_turn(255,5,4);
-            motor_turn(255,20,10);
+            motor_turn(255,20,5);
             suunta = 2;
         }
         
         //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(230,255,10);
+            motor_turn(240,255,8);
             suunta = 1;
         }
         
         //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,237,10);
+            motor_turn(255,247,8);
             suunta = 2;
         }    
     }
