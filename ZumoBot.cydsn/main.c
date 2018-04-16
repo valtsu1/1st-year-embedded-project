@@ -83,6 +83,8 @@ int avarage(float avarage) {
     }
 }
 
+
+
 #if 0
 //battery level//
 int main()
@@ -336,14 +338,26 @@ int main()
         }
         //jyrkkä vasen
         else if(left3 == 1) {
-                motor_turn(5,255,4);
+                //motor_turn(5,255,4);
+                
+
+                MotorDirLeft_Write(1);      // set LeftMotor forward mode
+                MotorDirRight_Write(0);     // set RightMotor forward mode
+                PWM_WriteCompare1(10); 
+                PWM_WriteCompare2(255); 
+                CyDelay(4);
                 suunta = 1;
                 
         }
         
         //jyrkkä oikea
         else if(right3 == 1) {
-            motor_turn(255,5,4);
+            //motor_turn(255,5,4);
+            MotorDirLeft_Write(0);      // set LeftMotor forward mode
+                MotorDirRight_Write(1);     // set RightMotor forward mode
+                PWM_WriteCompare1(255); 
+                PWM_WriteCompare2(10); 
+                CyDelay(4);
             suunta = 2;
         }
         
