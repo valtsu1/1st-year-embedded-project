@@ -307,6 +307,11 @@ int main()
             motor_stop();
         }
         
+        if (right3 == 1 && left3 == 1){
+            Beep(1000,245);
+        }
+       
+        
         //jos kaikki sensorit näkevät mustaa, asettaa sunnaksi 0
         /*while ((dig.l3 == 1 && dig.r3 == 1)){
             forward(255,10);
