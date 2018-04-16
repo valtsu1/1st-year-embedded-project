@@ -239,7 +239,7 @@ int main()
     //long int check = 10000;
   
     reflectance_start();
-    reflectance_set_threshold(8000, 9000, 11000, 11000, 9000, 8000); // set center sensor threshold to 11000 and others to 9000
+    reflectance_set_threshold(8000, 10000, 11000, 11000, 10000, 8000); // set center sensor threshold to 11000 and others to 9000
 
     for(;;)
     {
