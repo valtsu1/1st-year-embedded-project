@@ -306,12 +306,16 @@ int main()
         if(stop >= 4) {
             motor_stop();
         }
-        
+        /*
         if (right3 == 1 && left3 == 1){
             Beep(1000,245);
         }
-       
         
+        else {
+            Beep(0,0);
+        }
+       
+        */
         //jos kaikki sensorit näkevät mustaa, asettaa sunnaksi 0
         /*while ((dig.l3 == 1 && dig.r3 == 1)){
             forward(255,10);
@@ -329,12 +333,22 @@ int main()
         
         //jos sensorit näkevät vain valkoista ja suunta 1
         if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 1){
-            motor_turn(1,255,4);
+
+            MotorDirLeft_Write(1);      // set LeftMotor forward mode
+                MotorDirRight_Write(0);     // set RightMotor forward mode
+                PWM_WriteCompare1(2); 
+                PWM_WriteCompare2(255); 
+                CyDelay(4);
         }
         
         //jos sensorit näkevät vain valkoista ja suunta 2 
         else if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 2){
-            motor_turn(255,1,4);
+            
+            MotorDirLeft_Write(0);      // set LeftMotor forward mode
+                MotorDirRight_Write(1);     // set RightMotor forward mode
+                PWM_WriteCompare1(255); 
+                PWM_WriteCompare2(2); 
+                CyDelay(4);
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((left1 == 1 && right1 == 1 && left2 == 0 && left3 == 0 && right2 == 0 && right3 == 0 )|| (left1 == 1 && right1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0) || (right1 == 1 && left1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0)) {
@@ -344,13 +358,9 @@ int main()
         //jyrkkä vasen
         else if(left3 == 1) {
                 //motor_turn(5,255,4);
-                
+                motor_turn(100,255,4);
 
-                MotorDirLeft_Write(1);      // set LeftMotor forward mode
-                MotorDirRight_Write(0);     // set RightMotor forward mode
-                PWM_WriteCompare1(2); 
-                PWM_WriteCompare2(255); 
-                CyDelay(4);
+                
                 suunta = 1;
                 
         }
@@ -358,11 +368,7 @@ int main()
         //jyrkkä oikea
         else if(right3 == 1) {
             //motor_turn(255,5,4);
-            MotorDirLeft_Write(0);      // set LeftMotor forward mode
-                MotorDirRight_Write(1);     // set RightMotor forward mode
-                PWM_WriteCompare1(255); 
-                PWM_WriteCompare2(2); 
-                CyDelay(4);
+            motor_turn(255,100,4);
             suunta = 2;
         }
         
