@@ -323,7 +323,7 @@ int main()
         }*/
         
         //jos sensorit näkevät vain valkoista ja suunta 1
-        if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 1){
+        else if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 1){
             motor_turn(1,255,4);
         }
         
