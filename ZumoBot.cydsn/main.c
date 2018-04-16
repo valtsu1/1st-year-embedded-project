@@ -328,7 +328,7 @@ int main()
         }*/
         
         //jos sensorit näkevät vain valkoista ja suunta 1
-        else if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 1){
+        if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 1){
             motor_turn(1,255,4);
         }
         
@@ -348,7 +348,7 @@ int main()
 
                 MotorDirLeft_Write(1);      // set LeftMotor forward mode
                 MotorDirRight_Write(0);     // set RightMotor forward mode
-                PWM_WriteCompare1(10); 
+                PWM_WriteCompare1(2); 
                 PWM_WriteCompare2(255); 
                 CyDelay(4);
                 suunta = 1;
@@ -361,7 +361,7 @@ int main()
             MotorDirLeft_Write(0);      // set LeftMotor forward mode
                 MotorDirRight_Write(1);     // set RightMotor forward mode
                 PWM_WriteCompare1(255); 
-                PWM_WriteCompare2(10); 
+                PWM_WriteCompare2(2); 
                 CyDelay(4);
             suunta = 2;
         }
