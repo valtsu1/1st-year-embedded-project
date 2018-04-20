@@ -75,7 +75,7 @@ int lines(int left, int right) {
 }
 
 int avarage(float avarage) {
-    if (avarage/10 >  0.6) {
+    if (avarage/3 >  0.6) {
         return 1;
     }
     else {
@@ -220,6 +220,23 @@ int main()
 {
     //struct sensors_ ref;
     struct sensors_ dig;
+    /*
+    int l1min = 10000;
+    int l1max = 10000;
+    int l2min = 9000;
+    int l2max = 9000;
+    int l3min = 8000;
+    int l3max = 8000;
+    int r1min = 10000;
+    int r1max = 10000;
+    int r2min = 9000;
+    int r2max = 9000;
+    int r3min = 8000;
+    int r3max = 8000;
+    
+    int l1value,l2value,l3value;
+    int r1value,r2value,r3value;
+    */
     
     float left1,left2,left3 = 0;
     float right1,right2,right3 = 0;
@@ -229,35 +246,99 @@ int main()
     motor_forward(0,100);
     IR_Start();
 
+
     CyGlobalIntEnable; 
     UART_1_Start();
-    //ADC_Battery_Start();        
+    ADC_Battery_Start();        
 
-    //int16 adcresult = 0;
-    //float volts = 0.0;
+//    int16 adcresult = 0;
+//    float volts = 0.0;
     
     
     
     int suunta = 10;
     int stop = 0;
-    //long int time = 0; 
-    //long int check = 10000;
+   // long int time = 0; 
+   // long int check = 10000;
     int start = 0;
     reflectance_start();
-    reflectance_set_threshold(8000, 9000, 11000, 11000, 9000, 8000); // set center sensor threshold to 11000 and others to 9000
-    
-    
+    reflectance_set_threshold(15000,15000, 15000, 15000, 15000, 15000); // set center sensor threshold to 11000 and others to 9000
+    /*
+    for(;;) {
+        reflectance_read(&ref);
+        
+        if(ref.l1 <= l1min) {
+            l1min = ref.l1;
+        }
+        if(ref.l1 > l1max) {
+            l1max = ref.l1;
+        }
+        if(ref.l2 <= l2min) {
+            l2min = ref.l2;
+        }
+        if(ref.l2 > l2max) {
+            l2max = ref.l2;
+        }
+        if(ref.l3 <= l3min) {
+            l3min = ref.l3;
+        }
+        if(ref.l3 > l3max) {
+            l3max = ref.l3;
+        }
+        if(ref.r1 <= r1min) {
+            r1min = ref.r1;
+        }
+        if(ref.r1 > r1max) {
+            r1max = ref.r1;
+        }
+        if(ref.r2 <= r2min) {
+            r2min = ref.r2;
+        }
+        if(ref.r2 > r2max) {
+            r2max = ref.r2;
+        }
+        if(ref.r3 <= r3min) {
+            r3min = ref.r3;
+        }
+        if(r3max > ref.r3) {
+            r3max = ref.r3;
+        }
+        CyDelay(5);
+        
+            
+        if(SW1_Read() == 0) {
+
+            
+            
+            BatteryLed_Write(1);
+            CyDelay(2000);
+            BatteryLed_Write(0);
+            break;
+            
+        }
+    }
+            l1value = ((l1min + l1max) / 2);
+            l2value = ((l2min + l2max) / 2);
+            l3value = ((l3min + l3max) / 2);
+            
+            r1value = ((r1min + r1max) / 2);
+            r2value = ((r2min + r2max) / 2);
+            r3value = ((r3min + r3max) / 2);
+            
+    reflectance_set_threshold(l3value,l2value,l1value,r1value,r2value,r3value);*/
     while(start != 1) {
         reflectance_digital(&dig);
+        CyDelay(1);
         motor_forward(50,5);
         if(dig.l3 == 1 && dig.r3 == 1) {
             start = 1;
         }
+        
     }
     motor_forward(0,100);
     IR_flush();
     IR_wait();
-    motor_forward(240,15);
+    motor_forward(255,10);
     
     for(;;)
     {
@@ -273,9 +354,10 @@ int main()
     right2 = 0;
     right3 = 0;
         
-        
+     /*   
     //tarkastaa 10s välein onko pattereissa yli neljä volttia ja sytyttää ledin jos alle
-   /* if (time > check){
+    if (time > check){
+         Beep(50,255);
         ADC_Battery_StartConvert();
         if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for get ADC converted value
             adcresult = ADC_Battery_GetResult16(); // get the ADC value (0 - 4095)
@@ -285,12 +367,15 @@ int main()
 
             if (volts < 4){
                 BatteryLed_Write(1);
+                Beep(50,255);
+                Beep(100,001);
+                Beep(50,255);
             }
         }
     check += time;  
-    }*/
-    //time = GetTicks();
-
+    }
+    time = GetTicks();
+*/
 
         //vasemman moottorin heitto on -6.7
         // read raw sensor values
@@ -299,7 +384,7 @@ int main()
         
         // read digital values that are based on threshold. 0 = white, 1 = black
         // when blackness value is over threshold the sensors reads 1, otherwise 0
-        for(int i=0;i<=9;i++) {
+        for(int i=0;i<=2;i++) {
             reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance period
             left1+=dig.l1;
             left2+=dig.l2;
@@ -325,6 +410,9 @@ int main()
         
         if(stop >= 3) {
             motor_stop();
+            Beep(200,245);
+            Beep(200,001);
+            break;
         }
         /*
         if (right3 == 1 && left3 == 1){
@@ -353,22 +441,22 @@ int main()
         
         //jos sensorit näkevät vain valkoista ja suunta 1
         if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 1){
-
+            //motor_turn(1,240,4);
             MotorDirLeft_Write(1);      // set LeftMotor forward mode
                 MotorDirRight_Write(0);     // set RightMotor forward mode
-                PWM_WriteCompare1(50); 
+                PWM_WriteCompare1(255); 
                 PWM_WriteCompare2(255); 
-                CyDelay(3);
+                CyDelay(1);
         }
         
         //jos sensorit näkevät vain valkoista ja suunta 2 
         else if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 2){
-            
+            //motor_turn(240,1,4);
             MotorDirLeft_Write(0);      // set LeftMotor forward mode
                 MotorDirRight_Write(1);     // set RightMotor forward mode
                 PWM_WriteCompare1(255); 
-                PWM_WriteCompare2(50); 
-                CyDelay(3);
+                PWM_WriteCompare2(255); 
+                CyDelay(1);
         }
        //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((left1 == 1 && right1 == 1 && left2 == 0 && left3 == 0 && right2 == 0 && right3 == 0 )|| (left1 == 1 && right1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0) || (right1 == 1 && left1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0)) {
@@ -378,7 +466,7 @@ int main()
         //jyrkkä vasen
         else if(left3 == 1) {
                 //motor_turn(5,255,4);
-                motor_turn(13,255,5);
+                motor_turn(25,255,6);
 
                 
                 suunta = 1;
@@ -388,21 +476,22 @@ int main()
         //jyrkkä oikea
         else if(right3 == 1) {
             //motor_turn(255,5,4);
-            motor_turn(255,20,5);
+            motor_turn(255,32,6);
             suunta = 2;
         }
         
         //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(240,255,8);
+            motor_turn(228,255,8);
             suunta = 1;
         }
         
         //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,247,8);
+            motor_turn(255,235,8);
             suunta = 2;
-        }    
+        } 
+        CyDelay(1);
     }
 }   
 #endif
