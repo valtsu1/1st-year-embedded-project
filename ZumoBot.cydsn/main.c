@@ -51,6 +51,8 @@ int rread(void);
  * @brief   
  * @details  ** Enable global interrupt since Zumo library uses interrupts. **<br>&nbsp;&nbsp;&nbsp;CyGlobalIntEnable;<br>
 */
+
+//otti huomioon moottorien nopeuserot, käytettiin silloin kun robotilla ajeltiin ilman sensoreita
 void forward(uint8 speed,uint32 delay)
 {
     MotorDirLeft_Write(0);      // set LeftMotor forward mode
@@ -60,13 +62,17 @@ void forward(uint8 speed,uint32 delay)
     CyDelay(delay);
 }
 
+//mustien viivojen laskuri
 int lines(int left, int right) {
     static int check;
     static int fakeBoolean;
     
+    //asettaa arvoksi 1 kun robotti on mustan viivan päällä
     if(left == 1 && right == 1) {
         fakeBoolean = 1;
     }
+    
+    //jos robotti on ollut mustan viivan päällä ja näkee taas valkoista lisää checkin arvoa yhdellä
     if(fakeBoolean == 1 && left == 0 && right == 0) {
         check++;
         fakeBoolean = 0;
@@ -74,6 +80,7 @@ int lines(int left, int right) {
     return check;
 }
 
+//laskee keskiarvon kolmesta sensorin lukuarvosta
 int avarage(float avarage) {
     if (avarage/3 >  0.6) {
         return 1;
@@ -354,7 +361,7 @@ int main()
     motor_forward(0,100);
     IR_flush();
     IR_wait();
-    motor_forward(255,10);
+    motor_forward(255,5);
     
     
     //viivanseuraus loop
@@ -416,7 +423,7 @@ int main()
         
         
         //laskuri joka nousee yhdellä aina kun robotti menee mustan viivan yli
-        stop = lines(left3, right3);
+        stop = lines(dig.l3, dig.r3);
         
        
         //kolmannen viivan ylitettyään, robotti pysähtyy
@@ -447,30 +454,30 @@ int main()
         
        //robotti ajaa suoraan
         else if((left1 == 1 && right1 == 1 && left2 == 0 && left3 == 0 && right2 == 0 && right3 == 0 )|| (left1 == 1 && right1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0) || (right1 == 1 && left1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0)) {
-            forward(255,10);
+            forward(255,5);
         }
         
         //jyrkkä vasen
         else if(left3 == 1) {
-            motor_turn(25,255,6);
+            motor_turn(50,255,1);
             suunta = 1;       
         }
         
         //jyrkkä oikea
         else if(right3 == 1) {
-            motor_turn(255,32,6);
+            motor_turn(255,50,1);
             suunta = 2;
         }
         
        //loiva vasen
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(228,255,5);
+            motor_turn(244,255,1);
             suunta = 1;
         }
         
         //loiva oikea
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,235,5);
+            motor_turn(255,250,1);
             suunta = 2;
         } 
         CyDelay(1);
