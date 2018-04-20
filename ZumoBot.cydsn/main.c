@@ -218,26 +218,35 @@ int main()
 //reflectance//
 int main()
 {
-    //struct sensors_ ref;
+    //koodipätkiä joita saatetaan tarvita testaamiseen
+    //------------------------------------------------
+    //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);
+    //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);
+    //reflectance_set_threshold(15000,15000, 15000, 15000, 15000, 15000); 
+    //------------------------------------------------
+    
+    struct sensors_ ref;
     struct sensors_ dig;
-    /*
+    
+    //kalibrointiin käytettävät min/max arvot
     int l1min = 10000;
     int l1max = 10000;
-    int l2min = 9000;
-    int l2max = 9000;
-    int l3min = 8000;
-    int l3max = 8000;
+    int l2min = 10000;
+    int l2max = 10000;
+    int l3min = 10000;
+    int l3max = 10000;
     int r1min = 10000;
     int r1max = 10000;
-    int r2min = 9000;
-    int r2max = 9000;
-    int r3min = 8000;
-    int r3max = 8000;
+    int r2min = 10000;
+    int r2max = 10000;
+    int r3min = 10000;
+    int r3max = 10000;
     
+    //kalibroinnin lopullinen arvo
     int l1value,l2value,l3value;
     int r1value,r2value,r3value;
-    */
     
+    //muuttujat joilla lasketaan keskiarvo mustalle/valkoiselle, tarkoitus eliminoida virhearvot
     float left1,left2,left3 = 0;
     float right1,right2,right3 = 0;
     
@@ -250,82 +259,88 @@ int main()
     CyGlobalIntEnable; 
     UART_1_Start();
     ADC_Battery_Start();        
-
-//    int16 adcresult = 0;
-//    float volts = 0.0;
     
+    //patterin jännitteenseuraamiseen käytettävät muuttujat
+    int16 adcresult = 0;
+    float volts = 0.0;
+    long int time = 0;
+    long int check = 10000;
     
-    
+    //arvo joka kertoo mihin robotti on viimeksi kääntynyt
     int suunta = 10;
+    
+    //robotin mustan viivan laskuri
     int stop = 0;
-   // long int time = 0; 
-   // long int check = 10000;
+    
+    //muutuja jota käytetään aloitusviivan löytämiseen
     int start = 0;
+    
     reflectance_start();
-    reflectance_set_threshold(15000,15000, 15000, 15000, 15000, 15000); // set center sensor threshold to 11000 and others to 9000
-    /*
+
+
+    //kalibrointi loop, jota ajetaan niin kauan että robotin keskinappia painetaan
     for(;;) {
         reflectance_read(&ref);
-        
-        if(ref.l1 <= l1min) {
+        if(ref.l1 < l1min && ref.l1 > 0) {
             l1min = ref.l1;
         }
         if(ref.l1 > l1max) {
             l1max = ref.l1;
         }
-        if(ref.l2 <= l2min) {
+        if(ref.l2 < l2min && ref.l2 > 0) {
             l2min = ref.l2;
         }
         if(ref.l2 > l2max) {
             l2max = ref.l2;
         }
-        if(ref.l3 <= l3min) {
+        if(ref.l3 <= l3min && ref.l3 > 0) {
             l3min = ref.l3;
         }
         if(ref.l3 > l3max) {
             l3max = ref.l3;
         }
-        if(ref.r1 <= r1min) {
+        if(ref.r1 < r1min && ref.r1 > 0) {
             r1min = ref.r1;
         }
         if(ref.r1 > r1max) {
             r1max = ref.r1;
         }
-        if(ref.r2 <= r2min) {
+        if(ref.r2 < r2min && ref.r2 > 0) {
             r2min = ref.r2;
         }
         if(ref.r2 > r2max) {
             r2max = ref.r2;
         }
-        if(ref.r3 <= r3min) {
+        if(ref.r3 < r3min && ref.r3 > 0) {
             r3min = ref.r3;
         }
-        if(r3max > ref.r3) {
+        if(r3max < ref.r3) {
             r3max = ref.r3;
         }
-        CyDelay(5);
+        CyDelay(1);
         
-            
+        //lopettaa kalibroinnin jos robotin keskinappia painetaan    
         if(SW1_Read() == 0) {
-
-            
-            
             BatteryLed_Write(1);
-            CyDelay(2000);
+            CyDelay(1000);
             BatteryLed_Write(0);
             break;
             
         }
     }
-            l1value = ((l1min + l1max) / 2);
-            l2value = ((l2min + l2max) / 2);
-            l3value = ((l3min + l3max) / 2);
+            //laskee ja asettaa kalibroinnin tuloksen perusteella arvot sensoreille
+            l1value = ((l1min + l1max) / 3);
+            l2value = ((l2min + l2max) / 3);
+            l3value = ((l3min + l3max) / 3);
             
-            r1value = ((r1min + r1max) / 2);
-            r2value = ((r2min + r2max) / 2);
-            r3value = ((r3min + r3max) / 2);
+            r1value = ((r1min + r1max) / 3);
+            r2value = ((r2min + r2max) / 3);
+            r3value = ((r3min + r3max) / 3);
             
-    reflectance_set_threshold(l3value,l2value,l1value,r1value,r2value,r3value);*/
+            reflectance_set_threshold(l3value,l2value,l1value,r1value,r2value,r3value);
+    
+    
+    //robotti lähtee ajamaan aloitusviivalle, robotti ajaa suoraan niin kauan kunnes reunimmaiset sensorit näkevät mustaa
     while(start != 1) {
         reflectance_digital(&dig);
         CyDelay(1);
@@ -333,19 +348,24 @@ int main()
         if(dig.l3 == 1 && dig.r3 == 1) {
             start = 1;
         }
-        
     }
+    
+    //viivalle ajanut robotti jää odottamaan kaukosäätimen aloituskomentoa
     motor_forward(0,100);
     IR_flush();
     IR_wait();
     motor_forward(255,10);
     
+    
+    //viivanseuraus loop
     for(;;)
     {
-        
-    MotorDirLeft_Write(0);      // set LeftMotor forward mode
+    
+    //asettaa molemmat moottorit menemään suoraan
+    MotorDirLeft_Write(0);      
     MotorDirRight_Write(0);
-                
+    
+    //alustaa sensorien keskiarvotulokset
     left1 = 0;
     left2 = 0;
     left3 = 0;
@@ -354,15 +374,14 @@ int main()
     right2 = 0;
     right3 = 0;
         
-     /*   
+       
     //tarkastaa 10s välein onko pattereissa yli neljä volttia ja sytyttää ledin jos alle
     if (time > check){
-         Beep(50,255);
+        Beep(50,255);
         ADC_Battery_StartConvert();
-        if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for get ADC converted value
-            adcresult = ADC_Battery_GetResult16(); // get the ADC value (0 - 4095)
-            // convert value to Volts
-            // you need to implement the conversion
+        
+        if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   
+            adcresult = ADC_Battery_GetResult16(); 
             volts = (adcresult / 4095.0) * 5 * 1.5;
 
             if (volts < 4){
@@ -375,17 +394,11 @@ int main()
     check += time;  
     }
     time = GetTicks();
-*/
 
-        //vasemman moottorin heitto on -6.7
-        // read raw sensor values
-        //reflectance_read(&ref);
-        //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
-        
-        // read digital values that are based on threshold. 0 = white, 1 = black
-        // when blackness value is over threshold the sensors reads 1, otherwise 0
+
+        //lukee sensorit kolme kertaa ja laskee niille keskiarvon 
         for(int i=0;i<=2;i++) {
-            reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance period
+            reflectance_digital(&dig); 
             left1+=dig.l1;
             left2+=dig.l2;
             left3+=dig.l3;
@@ -402,93 +415,62 @@ int main()
         right3 = avarage(right3);
         
         
-        //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
-        
+        //laskuri joka nousee yhdellä aina kun robotti menee mustan viivan yli
         stop = lines(left3, right3);
         
        
-        
+        //kolmannen viivan ylitettyään, robotti pysähtyy
         if(stop >= 3) {
             motor_stop();
             Beep(200,245);
             Beep(200,001);
             break;
         }
-        /*
-        if (right3 == 1 && left3 == 1){
-            Beep(1000,245);
-        }
         
-        else {
-            Beep(0,0);
-        }
-       
-        */
-        //jos kaikki sensorit näkevät mustaa, asettaa sunnaksi 0
-        /*while ((dig.l3 == 1 && dig.r3 == 1)){
-            forward(255,10);
-            if((dig.l3 == 0 && dig.r3 == 0)) {
-                stop++;
-            }
-        }*/
-        
-        //jos suunta 0 ja sensorit näkevät vain valkoista
-        //else if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta ==// 0){
-        /*
-        if((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0) && suunta == 1 && stop >= 3 && suunta == 0) {
-            motor_forward(0,100);
-        }*/
-        
-        //jos sensorit näkevät vain valkoista ja suunta 1
+        //jos sensorit näkevät vain valkoista ja suunta 1 (robotti jatkaa vasemmalle kääntymistä vaikka hukkaa mustan viivan)
         if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 1){
-            //motor_turn(1,240,4);
-            MotorDirLeft_Write(1);      // set LeftMotor forward mode
-                MotorDirRight_Write(0);     // set RightMotor forward mode
-                PWM_WriteCompare1(255); 
-                PWM_WriteCompare2(255); 
-                CyDelay(1);
+            MotorDirLeft_Write(1);    
+            MotorDirRight_Write(0);    
+            PWM_WriteCompare1(255); 
+            PWM_WriteCompare2(255); 
+            CyDelay(1);
         }
         
-        //jos sensorit näkevät vain valkoista ja suunta 2 
+        //jos sensorit näkevät vain valkoista ja suunta 2 (robotti jatkaa oikealle kääntymistä vaikka hukkaa mustan viivan)
         else if ((left1 == 0 && left2 == 0 && left3 == 0 && right1 == 0 && right2 == 0 && right3 == 0) && suunta == 2){
-            //motor_turn(240,1,4);
-            MotorDirLeft_Write(0);      // set LeftMotor forward mode
-                MotorDirRight_Write(1);     // set RightMotor forward mode
-                PWM_WriteCompare1(255); 
-                PWM_WriteCompare2(255); 
-                CyDelay(1);
+            MotorDirLeft_Write(0);      
+            MotorDirRight_Write(1);     
+            PWM_WriteCompare1(255); 
+            PWM_WriteCompare2(255); 
+            CyDelay(1);
         }
-       //suoraan (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
+        
+       //robotti ajaa suoraan
         else if((left1 == 1 && right1 == 1 && left2 == 0 && left3 == 0 && right2 == 0 && right3 == 0 )|| (left1 == 1 && right1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0) || (right1 == 1 && left1 == 0 && right2 == 0 && right3 == 0 && left2 == 0 && left3 == 0)) {
             forward(255,10);
-            suunta = 0;
         }
+        
         //jyrkkä vasen
         else if(left3 == 1) {
-                //motor_turn(5,255,4);
-                motor_turn(25,255,6);
-
-                
-                suunta = 1;
-                
+            motor_turn(25,255,6);
+            suunta = 1;       
         }
         
         //jyrkkä oikea
         else if(right3 == 1) {
-            //motor_turn(255,5,4);
             motor_turn(255,32,6);
             suunta = 2;
         }
         
-        //vasemmalle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
+       //loiva vasen
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(228,255,8);
+            motor_turn(228,255,5);
             suunta = 1;
         }
         
-        //oikealle (asettaa suunnan arvoksi 0 ja mahdollistaa pysähtymisen valkoisella)
+        //loiva oikea
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,235,8);
+            motor_turn(255,235,5);
             suunta = 2;
         } 
         CyDelay(1);
