@@ -274,7 +274,7 @@ int main()
     long int check = 10000;
     
     //arvo joka kertoo mihin robotti on viimeksi kääntynyt
-    int suunta = 10;
+    int suunta = 8;
     
     //robotin mustan viivan laskuri
     int stop = 0;
@@ -283,11 +283,19 @@ int main()
     int start = 0;
     
     reflectance_start();
-
-
+    
+    for(;;) {
+            if(SW1_Read() == 0) {
+                suunta = 10;
+                break;
+            }
+    }
+    
     //kalibrointi loop, jota ajetaan niin kauan että robotin keskinappia painetaan
     for(;;) {
+
         reflectance_read(&ref);
+            
         if(ref.l1 < l1min && ref.l1 > 0) {
             l1min = ref.l1;
         }
@@ -324,17 +332,68 @@ int main()
         if(r3max < ref.r3) {
             r3max = ref.r3;
         }
-        CyDelay(1);
+        
+        
         
         //lopettaa kalibroinnin jos robotin keskinappia painetaan    
-        if(SW1_Read() == 0) {
+        if(suunta == 14) {
+            motor_forward(0,100);
             BatteryLed_Write(1);
             CyDelay(1000);
             BatteryLed_Write(0);
             break;
             
         }
+        
+        if(suunta == 13) {
+            MotorDirLeft_Write(1);    
+            MotorDirRight_Write(0);    
+            PWM_WriteCompare1(100); 
+            PWM_WriteCompare2(100); 
+            if(ref.l2 > 20000) {
+            suunta = 14;
+            }
+        }
+        
+        //oikeelle vol2
+        if(suunta == 12) {
+            MotorDirLeft_Write(0);    
+            MotorDirRight_Write(1);    
+            PWM_WriteCompare1(100); 
+            PWM_WriteCompare2(100); 
+            if(ref.r3 > 20000 && ref.r1 < 10000 && ref.r2 < 10000 && ref.l1 < 10000 && ref.l2 < 10000 && ref.l3 < 10000) {
+            suunta = 13;
+            }
+        }
+        
+        
+        //oikeelle
+        if(suunta == 11) {
+            MotorDirLeft_Write(0);    
+            MotorDirRight_Write(1);    
+            PWM_WriteCompare1(100); 
+            PWM_WriteCompare2(100); 
+            if(ref.l3 > 20000) {
+                suunta = 12;
+            }
+        }
+        
+        //vasemmalle
+        if(suunta == 10) {
+            MotorDirLeft_Write(1);    
+            MotorDirRight_Write(0);    
+            PWM_WriteCompare1(100); 
+            PWM_WriteCompare2(100); 
+            if(ref.l3 > 20000) {
+            suunta = 11;
+            }
+        }
+        CyDelay(1);
     }
+
+
+    
+        
             //laskee ja asettaa kalibroinnin tuloksen perusteella arvot sensoreille
             l1value = ((l1min + l1max) / 3);
             l2value = ((l2min + l2max) / 3);
@@ -459,13 +518,13 @@ int main()
         
         //jyrkkä vasen
         else if(left3 == 1) {
-            motor_turn(50,255,1);
+            motor_turn(20,255,1);
             suunta = 1;       
         }
         
         //jyrkkä oikea
         else if(right3 == 1) {
-            motor_turn(255,50,1);
+            motor_turn(255,20,1);
             suunta = 2;
         }
         
