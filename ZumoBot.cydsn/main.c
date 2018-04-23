@@ -291,6 +291,8 @@ int main()
             }
     }
     
+    CyDelay(1000);
+    
     //kalibrointi loop, jota ajetaan niin kauan että robotin keskinappia painetaan
     for(;;) {
 
@@ -350,7 +352,7 @@ int main()
             MotorDirRight_Write(0);    
             PWM_WriteCompare1(100); 
             PWM_WriteCompare2(100); 
-            if(ref.l2 > 20000) {
+            if(ref.r1 > 20000 && ref.l1 > 20000) {
             suunta = 14;
             }
         }
@@ -373,7 +375,7 @@ int main()
             MotorDirRight_Write(1);    
             PWM_WriteCompare1(100); 
             PWM_WriteCompare2(100); 
-            if(ref.l3 > 20000) {
+            if(ref.l3 > 20000 && ref.l1 < 10000 && ref.l2 < 10000 && ref.r1 < 10000 && ref.r2 < 10000 && ref.r3 < 10000) {
                 suunta = 12;
             }
         }
