@@ -352,7 +352,7 @@ int main()
             MotorDirRight_Write(0);    
             PWM_WriteCompare1(100); 
             PWM_WriteCompare2(100); 
-            if(ref.r1 > 20000 && ref.l1 > 20000) {
+            if(ref.r1 > 16000 && ref.l1 > 16000) {
             suunta = 14;
             }
         }
