@@ -203,10 +203,10 @@ int main()
                 
             //vasen käännös
             if (first_random == 0){
-                MotorDirLeft_Write(1);      // set LeftMotor backward mode
-                MotorDirRight_Write(0);     // set RightMotor backward mode
-                for (int i = 0; i<8;i++){
-                    motor_turn(255,255,second_random / 8);
+                MotorDirLeft_Write(1);     
+                MotorDirRight_Write(0);    
+                for (int i = 0; i<10;i++){
+                    motor_turn(255,255,second_random / 10);
                     distance = Ultra_GetDistance();
                     if(distance <= 13){
                         break;
@@ -215,10 +215,10 @@ int main()
             }
             //oikea käännös
             else{
-                MotorDirLeft_Write(0);      // set LeftMotor backward mode
-                MotorDirRight_Write(1);     // set RightMotor backward mode
-                for (int i = 0; i<8;i++){
-                    motor_turn(255,255,second_random / 8);
+                MotorDirLeft_Write(0);
+                MotorDirRight_Write(1);
+                for (int i = 0; i<10;i++){
+                    motor_turn(255,255,second_random / 10);
                     distance = Ultra_GetDistance();
                     if(distance <= 13){
                         break;
