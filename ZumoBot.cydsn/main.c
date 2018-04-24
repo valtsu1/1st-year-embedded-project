@@ -190,16 +190,16 @@ int main()
     for(;;){
         reflectance_digital(&dig);
         int first_random = rand() % 2;
-        int second_random = rand() % 300 + 200;
+        int second_random = rand() % 300 + 300;
         int distance = Ultra_GetDistance();
-        if ((distance <= 35 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
+        
+        if ((distance <= 13 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
             MotorDirRight_Write(0);
             forward(255,2);
         }
-        
         else{
-            motor_backward(200,250);
+            motor_backward(200,350);
                 
             //vasen käännös
             if (first_random == 0){
@@ -208,7 +208,7 @@ int main()
                 for (int i = 0; i<8;i++){
                     motor_turn(255,255,second_random / 8);
                     distance = Ultra_GetDistance();
-                    if(distance < 35){
+                    if(distance <= 13){
                         break;
                     }
                 }
@@ -220,7 +220,7 @@ int main()
                 for (int i = 0; i<8;i++){
                     motor_turn(255,255,second_random / 8);
                     distance = Ultra_GetDistance();
-                    if(distance < 35){
+                    if(distance <= 13){
                         break;
                     }
             }   
