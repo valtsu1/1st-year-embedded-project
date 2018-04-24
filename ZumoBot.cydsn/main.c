@@ -28,7 +28,8 @@
     I2C, UART, Serial<br>
     </p>
 */
-
+#include <stdlib.h>
+#include <time.h>
 #include <project.h>
 #include <stdio.h>
 #include "Systick.h"
@@ -171,21 +172,43 @@ int main()
 #endif
 
 
-#if 0
+#if 1
 //ultrasonic sensor//
 int main()
 {
-    CyGlobalIntEnable; 
+    CyGlobalIntEnable;
+    motor_start();
     UART_1_Start();
     Systick_Start();
-    Ultra_Start();                          // Ultra Sonic Start function
-    while(1) {
-        int d = Ultra_GetDistance();
+    srand(time(NULL)); 
+    //Ultra_Start();                          // Ultra Sonic Start function
+    //while(1) {
+        //int d = Ultra_GetDistance();
         //If you want to print out the value  
-        printf("distance = %d\r\n", d);
-        CyDelay(200);
+        //printf("distance = %d\r\n", d);
+        //CyDelay(200)
+    struct sensors_ dig;
+    reflectance_start();
+    reflectance_set_threshold(14000,14000,14000,14000,14000,14000);
+    for(;;){
+    
+    reflectance_digital(&dig);
+    if (dig.r3 == 0 && dig.l3 == 0){
+        forward(200,2);
     }
-}   
+    else{
+            motor_backward(200,600);
+            int first_random = rand() % 2;
+            int second_random = rand() % 500 + 300;
+            if (first_random == 0){
+                motor_turn(0,255,second_random);
+            }
+            else{
+                motor_turn(255,0,second_random);
+            }   
+    }
+    }
+}
 #endif
 
 
@@ -221,7 +244,7 @@ int main()
  }   
 #endif
 
-#if 1
+#if 0
 //reflectance//
 int main()
 {
