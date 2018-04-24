@@ -139,46 +139,26 @@ int main()
 // button
 int main()
 {
-    CyGlobalIntEnable; 
+    CyGlobalIntEnable;
     UART_1_Start();
-    Systick_Start();
+    Ultra_Start();                          // Ultra Sonic Start function
+    while(1) {
+        int d = Ultra_GetDistance();
+        //If you want to print out the value  
+        printf("distance = %d\r\n", d);
+        CyDelay(200);
+}
+}
     
-    printf("\nBoot\n");
-
-    //BatteryLed_Write(1); // Switch led on 
-    BatteryLed_Write(0); // Switch led off 
-    
-    //uint8 button;
-    //button = SW1_Read(); // read SW1 on pSoC board
-    // SW1_Read() returns zero when button is pressed
-    // SW1_Read() returns one when button is not pressed
-    
-    bool led = false;
-    
-    for(;;)
-    {
-        // toggle led state when button is pressed
-        if(SW1_Read() == 0) {
-            led = !led;
-            BatteryLed_Write(led);
-            ShieldLed_Write(led);
-            if(led) printf("Led is ON\n");
-            else printf("Led is OFF\n");
-            Beep(1000, 150);
-            while(SW1_Read() == 0) CyDelay(10); // wait while button is being pressed
-        }        
-    }
- }   
 #endif
 
 
 #if 1
-//ultrasonic sensor//
 int main()
 {
     CyGlobalIntEnable;
-    motor_start();
     UART_1_Start();
+    motor_start();
     Systick_Start();
     srand(time(NULL)); 
     //Ultra_Start();                          // Ultra Sonic Start function
@@ -188,27 +168,67 @@ int main()
         //printf("distance = %d\r\n", d);
         //CyDelay(200)
     struct sensors_ dig;
+    int start = 0;
     reflectance_start();
     reflectance_set_threshold(14000,14000,14000,14000,14000,14000);
-    for(;;){
-    
-    reflectance_digital(&dig);
-    if (dig.r3 == 0 && dig.l3 == 0){
-        forward(200,2);
+     while(start != 1) {
+        reflectance_digital(&dig);
+        CyDelay(1);
+        motor_forward(50,5);
+        if(dig.l3 == 1 && dig.r3 == 1) {
+            start = 1;
+        }
     }
-    else{
-            motor_backward(200,600);
-            int first_random = rand() % 2;
-            int second_random = rand() % 500 + 300;
+    
+    //viivalle ajanut robotti jää odottamaan kaukosäätimen aloituskomentoa
+    motor_forward(0,100);
+    IR_Start();
+    Ultra_Start();                          // Ultra Sonic Start function
+    IR_flush();
+    IR_wait();
+    motor_forward(255,300);
+    for(;;){
+        reflectance_digital(&dig);
+        int first_random = rand() % 2;
+        int second_random = rand() % 300 + 200;
+        int distance = Ultra_GetDistance();
+        if ((distance <= 35 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
+            MotorDirLeft_Write(0);
+            MotorDirRight_Write(0);
+            forward(255,2);
+        }
+        
+        else{
+            motor_backward(200,250);
+                
+            //vasen käännös
             if (first_random == 0){
-                motor_turn(0,255,second_random);
+                MotorDirLeft_Write(1);      // set LeftMotor backward mode
+                MotorDirRight_Write(0);     // set RightMotor backward mode
+                for (int i = 0; i<8;i++){
+                    motor_turn(255,255,second_random / 8);
+                    distance = Ultra_GetDistance();
+                    if(distance < 35){
+                        break;
+                    }
+                }
             }
+            //oikea käännös
             else{
-                motor_turn(255,0,second_random);
+                MotorDirLeft_Write(0);      // set LeftMotor backward mode
+                MotorDirRight_Write(1);     // set RightMotor backward mode
+                for (int i = 0; i<8;i++){
+                    motor_turn(255,255,second_random / 8);
+                    distance = Ultra_GetDistance();
+                    if(distance < 35){
+                        break;
+                    }
             }   
+        }
     }
     }
 }
+
 #endif
 
 
