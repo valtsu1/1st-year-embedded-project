@@ -191,25 +191,25 @@ int main()
     for(;;){
         reflectance_digital(&dig);
         int first_random = rand() % 2;
-        int second_random = rand() % 250 + 300;
+        int second_random = rand() % 180 + 300;
         int distance = Ultra_GetDistance();
         
-        if ((distance <= 13 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
+        if ((distance <= 15 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
             MotorDirRight_Write(0);
             forward(255,2);
         }
         else{
-            motor_backward(255,150);
-                
-            //vasen käännös
+            motor_backward(255,170);
+               
+           // vasen käännös
             if (first_random == 0){
                 MotorDirLeft_Write(1);     
                 MotorDirRight_Write(0);    
-                for (int i = 0; i<15;i++){
-                    motor_turn(255,255,second_random / 15);
+                for (int i = 0; i<20;i++){
+                    motor_turn(255,255,second_random / 20);
                     distance = Ultra_GetDistance();
-                    if(distance <= 13){
+                    if(distance <= 15){
                         break;
                     }
                 }
@@ -218,15 +218,15 @@ int main()
             else{
                 MotorDirLeft_Write(0);
                 MotorDirRight_Write(1);
-                for (int i = 0; i<15;i++){
-                    motor_turn(255,255,second_random / 15);
+                for (int i = 0; i<20;i++){
+                    motor_turn(255,255,second_random / 20);
                     distance = Ultra_GetDistance();
-                    if(distance <= 13){
+                    if(distance <= 15){
                         break;
                     }
-            }   
+                }
+            }
         }
-    }
     }
 }
 
