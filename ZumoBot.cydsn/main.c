@@ -63,10 +63,24 @@ void forward(uint8 speed,uint32 delay)
     CyDelay(delay);
 }
 
+//kalibrointipyörähdys
+int kalibrate(float left, float right) {
+    static int check = 0, fakeBoolean;
+    
+    if(left > 16000 && right > 16000) {
+        fakeBoolean = 1;
+    }
+    
+    if(fakeBoolean == 1 && left < 8000 && right < 8000) {
+        check++;
+    }
+    return check;
+}
+
+
 //mustien viivojen laskuri
 int lines(int left, int right) {
-    static int check;
-    static int fakeBoolean;
+    static int check, fakeBoolean;
     
     //asettaa arvoksi 1 kun robotti on mustan viivan päällä
     if(left == 1 && right == 1) {
@@ -153,7 +167,7 @@ int main()
 #endif
 
 
-#if 1
+#if 0
 int main()
 {
     CyGlobalIntEnable;
@@ -265,7 +279,7 @@ int main()
  }   
 #endif
 
-#if 0
+#if 1
 //reflectance//
 int main()
 {
@@ -317,7 +331,8 @@ int main()
     long int time = 0;
     long int check = 10000;
     
-    //arvo joka kertoo mihin robotti on viimeksi kääntynyt
+    //arvo joka kertoo mihin robotti on viimeksi kääntynyt, käytetään myös alun kalibroinnissa 
+    //(ARVO PITÄÄ OLLA ENNEN AJOLOOPPIA YLI 5)
     int suunta = 8;
     
     //robotin mustan viivan laskuri
@@ -328,6 +343,7 @@ int main()
     
     reflectance_start();
     
+    //robotti odottaa kalibroinnin aloittamista kunnes keskinappia painetaan
     for(;;) {
             if(SW1_Read() == 0) {
                 suunta = 10;
@@ -337,7 +353,7 @@ int main()
     
     CyDelay(1000);
     
-    //kalibrointi loop, jota ajetaan niin kauan että robotin keskinappia painetaan
+    //kalibrointi loop
     for(;;) {
 
         reflectance_read(&ref);
@@ -380,8 +396,10 @@ int main()
         }
         
         
+        //viivalaskuri kalibrointipyörähdykseen, robotti pyörähtää kerran vasemmalle 360 astetta
+        start = kalibrate(ref.l1,ref.r1);
         
-        //lopettaa kalibroinnin jos robotin keskinappia painetaan    
+    
         if(suunta == 14) {
             motor_forward(0,100);
             BatteryLed_Write(1);
@@ -391,52 +409,24 @@ int main()
             
         }
         
-        if(suunta == 13) {
-            MotorDirLeft_Write(1);    
-            MotorDirRight_Write(0);    
-            PWM_WriteCompare1(100); 
-            PWM_WriteCompare2(100); 
-            if(ref.r1 > 16000 && ref.l1 > 16000) {
-            suunta = 14;
-            }
-        }
-        
-        //oikeelle vol2
-        if(suunta == 12) {
-            MotorDirLeft_Write(0);    
-            MotorDirRight_Write(1);    
-            PWM_WriteCompare1(100); 
-            PWM_WriteCompare2(100); 
-            if(ref.r3 > 20000 && ref.r1 < 10000 && ref.r2 < 10000 && ref.l1 < 10000 && ref.l2 < 10000 && ref.l3 < 10000) {
-            suunta = 13;
-            }
-        }
-        
-        
-        //oikeelle
-        if(suunta == 11) {
-            MotorDirLeft_Write(0);    
-            MotorDirRight_Write(1);    
-            PWM_WriteCompare1(100); 
-            PWM_WriteCompare2(100); 
-            if(ref.l3 > 20000 && ref.l1 < 10000 && ref.l2 < 10000 && ref.r1 < 10000 && ref.r2 < 10000 && ref.r3 < 10000) {
-                suunta = 12;
-            }
-        }
-        
-        //vasemmalle
+        //vasemmalle kunnes menee kerran viivan yli ja palaa takaisin aloituspisteeseen
         if(suunta == 10) {
+            
             MotorDirLeft_Write(1);    
             MotorDirRight_Write(0);    
-            PWM_WriteCompare1(100); 
-            PWM_WriteCompare2(100); 
-            if(ref.l3 > 20000) {
-            suunta = 11;
-            }
+            PWM_WriteCompare1(50); 
+            PWM_WriteCompare2(50); 
+            
+            //robotti on mennyt kerran viivan yli ja palaa takaisin aloituspisteeseen
+            if(start >= 1 && ref.l1 > 16000 && ref.r1 > 16000) {
+                suunta = 14;
         }
         CyDelay(1);
     }
-
+    
+        
+        //alustaa start muuttujan
+        start = 0;
 
     
         
@@ -487,9 +477,8 @@ int main()
     right3 = 0;
         
        
-    //tarkastaa 10s välein onko pattereissa yli neljä volttia ja sytyttää ledin jos alle
+    //tarkastaa 10s välein onko pattereissa yli neljä volttia, sytyttää ledin ja piippaa jos alle
     if (time > check){
-        Beep(50,255);
         ADC_Battery_StartConvert();
         
         if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   
@@ -564,25 +553,25 @@ int main()
         
         //jyrkkä vasen
         else if(left3 == 1) {
-            motor_turn(20,255,1);
+            motor_turn(10,255,2);
             suunta = 1;       
         }
         
         //jyrkkä oikea
         else if(right3 == 1) {
-            motor_turn(255,20,1);
+            motor_turn(255,10,2);
             suunta = 2;
         }
         
        //loiva vasen
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(244,255,1);
+            motor_turn(245,255,1);
             suunta = 1;
         }
         
         //loiva oikea
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,250,1);
+            motor_turn(255,245,1);
             suunta = 2;
         } 
         CyDelay(1);
