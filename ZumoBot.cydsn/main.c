@@ -197,7 +197,7 @@ int main()
         if ((distance <= 15 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
             MotorDirRight_Write(0);
-            forward(255,2);
+            motor_forward(255,2);
         }
         else{
             motor_backward(255,170);
