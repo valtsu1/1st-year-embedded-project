@@ -167,11 +167,12 @@ int main()
 #endif
 
 
-#if 0
+#if 1
 int main()
 {
     CyGlobalIntEnable;
     UART_1_Start();
+    ADC_Battery_Start();
     motor_start();
     Systick_Start();
     srand(time(NULL)); 
@@ -204,9 +205,14 @@ int main()
     
     for(;;){
         reflectance_digital(&dig);
+        BatteryLed_Write(0);
         int first_random = rand() % 2;
         int second_random = rand() % 180 + 300;
         int distance = Ultra_GetDistance();
+        
+        if (distance <= 15){
+            BatteryLed_Write(1);
+        }
         
         if ((distance <= 15 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
@@ -279,7 +285,7 @@ int main()
  }   
 #endif
 
-#if 1
+#if 0
 //reflectance//
 int main()
 {
