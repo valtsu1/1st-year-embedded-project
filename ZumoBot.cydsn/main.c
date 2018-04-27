@@ -207,7 +207,7 @@ int main()
         reflectance_digital(&dig);
         BatteryLed_Write(0);
         int first_random = rand() % 2;
-        int second_random = rand() % 180 + 300;
+        int second_random = rand() % 230 + 250;
         int distance = Ultra_GetDistance();
         
         if (distance <= 15){
