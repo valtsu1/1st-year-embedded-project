@@ -207,10 +207,10 @@ int main()
         reflectance_digital(&dig);
         BatteryLed_Write(0);
         int first_random = rand() % 2;
-        int second_random = rand() % 230 + 250;
+        int second_random = rand() % 250 + 250;
         int distance = Ultra_GetDistance();
         
-        if (distance <= 15){
+        if (distance <= 20){
             BatteryLed_Write(1);
         }
         
@@ -220,7 +220,7 @@ int main()
             motor_forward(255,2);
         }
         else{
-            motor_backward(255,170);
+            motor_backward(255,200);
                
            // vasen käännös
             if (first_random == 0){
