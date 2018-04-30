@@ -166,8 +166,7 @@ int main()
     
 #endif
 
-
-#if 1
+#if 0
 int main()
 {
     CyGlobalIntEnable;
@@ -285,7 +284,7 @@ int main()
  }   
 #endif
 
-#if 0
+#if 1
 //reflectance//
 int main()
 {
@@ -337,9 +336,8 @@ int main()
     long int time = 0;
     long int check = 10000;
     
-    //arvo joka kertoo mihin robotti on viimeksi kääntynyt, käytetään myös alun kalibroinnissa 
-    //(ARVO PITÄÄ OLLA ENNEN AJOLOOPPIA YLI 5)
-    int suunta = 8;
+    //arvo joka kertoo mihin robotti on viimeksi kääntynyt
+    int suunta = 10;
     
     //robotin mustan viivan laskuri
     int stop = 0;
@@ -352,11 +350,10 @@ int main()
     //robotti odottaa kalibroinnin aloittamista kunnes keskinappia painetaan
     for(;;) {
             if(SW1_Read() == 0) {
-                suunta = 10;
                 break;
             }
     }
-    
+    BatteryLed_Write(1);
     CyDelay(1000);
     
     //kalibrointi loop
@@ -401,34 +398,14 @@ int main()
             r3max = ref.r3;
         }
         
-        
-        //viivalaskuri kalibrointipyörähdykseen, robotti pyörähtää kerran vasemmalle 360 astetta
-        start = kalibrate(ref.l1,ref.r1);
-        
-    
-        if(suunta == 14) {
-            motor_forward(0,100);
-            BatteryLed_Write(1);
-            CyDelay(1000);
-            BatteryLed_Write(0);
-            break;
-            
+        if(SW1_Read() == 0) {
+                break;
         }
-        
-        //vasemmalle kunnes menee kerran viivan yli ja palaa takaisin aloituspisteeseen
-        if(suunta == 10) {
-            
-            MotorDirLeft_Write(1);    
-            MotorDirRight_Write(0);    
-            PWM_WriteCompare1(50); 
-            PWM_WriteCompare2(50); 
-            
-            //robotti on mennyt kerran viivan yli ja palaa takaisin aloituspisteeseen
-            if(start >= 1 && ref.l1 > 16000 && ref.r1 > 16000) {
-                suunta = 14;
-        }
+ 
         CyDelay(1);
     }
+    
+        BatteryLed_Write(0);
     
         
         //alustaa start muuttujan
@@ -437,16 +414,16 @@ int main()
     
         
             //laskee ja asettaa kalibroinnin tuloksen perusteella arvot sensoreille
-            l1value = ((l1min + l1max) / 3);
-            l2value = ((l2min + l2max) / 3);
-            l3value = ((l3min + l3max) / 3);
+            l1value = ((l1min + l1max) / 2);
+            l2value = ((l2min + l2max) / 2);
+            l3value = ((l3min + l3max) / 2);
             
-            r1value = ((r1min + r1max) / 3);
-            r2value = ((r2min + r2max) / 3);
-            r3value = ((r3min + r3max) / 3);
+            r1value = ((r1min + r1max) / 2);
+            r2value = ((r2min + r2max) / 2);
+            r3value = ((r3min + r3max) / 2);
             
             reflectance_set_threshold(l3value,l2value,l1value,r1value,r2value,r3value);
-    
+            //reflectance_set_threshold(16000,16000,16000,16000,16000,16000);
     
     //robotti lähtee ajamaan aloitusviivalle, robotti ajaa suoraan niin kauan kunnes reunimmaiset sensorit näkevät mustaa
     while(start != 1) {
