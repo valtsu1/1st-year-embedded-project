@@ -167,6 +167,15 @@ int main()
 #endif
 
 #if 0
+    int main(){
+        UART_1_Start();
+        ADC_Battery_Start();
+        motor_start();
+        motor_forward(255,1000);
+    }
+#endif
+    
+#if 1
 int main()
 {
     CyGlobalIntEnable;
@@ -175,12 +184,6 @@ int main()
     motor_start();
     Systick_Start();
     srand(time(NULL)); 
-    //Ultra_Start();                          // Ultra Sonic Start function
-    //while(1) {
-        //int d = Ultra_GetDistance();
-        //If you want to print out the value  
-        //printf("distance = %d\r\n", d);
-        //CyDelay(200)
     struct sensors_ dig;
     int start = 0;
     reflectance_start();
@@ -228,7 +231,7 @@ int main()
                 for (int i = 0; i<20;i++){
                     motor_turn(255,255,second_random / 20);
                     distance = Ultra_GetDistance();
-                    if(distance <= 15){
+                    if(distance <= 20){
                         break;
                     }
                 }
@@ -240,7 +243,7 @@ int main()
                 for (int i = 0; i<20;i++){
                     motor_turn(255,255,second_random / 20);
                     distance = Ultra_GetDistance();
-                    if(distance <= 15){
+                    if(distance <= 20){
                         break;
                     }
                 }
@@ -284,7 +287,7 @@ int main()
  }   
 #endif
 
-#if 1
+#if 0
 //reflectance//
 int main()
 {
