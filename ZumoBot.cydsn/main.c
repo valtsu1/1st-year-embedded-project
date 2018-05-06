@@ -136,14 +136,7 @@ int main()
 #endif
 
 //sumorinki------------------------------------------------------------------------------------
-#if 0
-    int main(){
-        UART_1_Start();
-        ADC_Battery_Start();
-        motor_start();
-        motor_forward(255,1000);
-    }
-#endif
+
     
 #if 1
 int main()
@@ -231,45 +224,9 @@ int main()
 #endif
 
 
-<<<<<<< HEAD
-//viivaseuraus------------------------------------------------------------------------------------------------
-#if 1
-=======
-#if 0
-//IR receiver//
-int main()
-{
-    CyGlobalIntEnable; 
-    UART_1_Start();
-    IR_Start();
-    
-    uint32_t IR_val; 
-    
-    printf("\n\nIR test\n");
-    
-    IR_flush(); // clear IR receive buffer
-    printf("Buffer cleared\n");
-    
-    IR_wait(); // wait for IR command
-    printf("IR command received\n");
-    
-    // print received IR pulses and their lengths
-    for(;;)
-    {
-        if(IR_get(&IR_val)) {
-            int l = IR_val & IR_SIGNAL_MASK; // get pulse length
-            int b = 0;
-            if((IR_val & IR_SIGNAL_HIGH) != 0) b = 1; // get pulse state (0/1)
-            printf("%d %d\r\n",b, l);
-            //printf("%d %lu\r\n",IR_val & IR_SIGNAL_HIGH ? 1 : 0, (unsigned long) (IR_val & IR_SIGNAL_MASK));
-        }
-    }    
- }   
-#endif
 
+//viivaseuraus------------------------------------------------------------------------------------------------
 #if 0
-//reflectance//
->>>>>>> 1275c2aa6d98add61c03ea4c812c2593803f518d
 int main()
 {
     //koodipätkiä joita saatetaan tarvita testaamiseen
