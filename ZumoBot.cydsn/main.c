@@ -178,6 +178,7 @@ int main()
 #if 1
 int main()
 {
+    //käynnistetään kaikki tarvittava
     CyGlobalIntEnable;
     UART_1_Start();
     ADC_Battery_Start();
@@ -188,6 +189,7 @@ int main()
     int start = 0;
     reflectance_start();
     reflectance_set_threshold(14000,14000,14000,14000,14000,14000);
+    //robotti menee mustalle viivalle
      while(start != 1) {
         reflectance_digital(&dig);
         CyDelay(1);
@@ -196,7 +198,6 @@ int main()
             start = 1;
         }
     }
-    
     //viivalle ajanut robotti jää odottamaan kaukosäätimen aloituskomentoa
     motor_forward(0,100);
     IR_Start();
@@ -208,23 +209,27 @@ int main()
     for(;;){
         reflectance_digital(&dig);
         BatteryLed_Write(0);
+        // first_random on vasen/oikea käännös päätös
         int first_random = rand() % 2;
+        //second_random on aika, jonka robotti kääntyy väliltä 250 - 499
         int second_random = rand() % 250 + 250;
         int distance = Ultra_GetDistance();
-        
+        // etäisyystesti ledillä   
         if (distance <= 20){
             BatteryLed_Write(1);
         }
-        
-        if ((distance <= 15 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
+        // jos robotti näkee mustaa tai näkee vihollisen 
+        if ((distance <= 20 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
             MotorDirRight_Write(0);
             motor_forward(255,2);
         }
+        // jos ei nähdä mitään peruutetaan ja valitaan käännös
         else{
             motor_backward(255,200);
                
            // vasen käännös
+           // jos nähdään kohde kääntymisen aikana, kääntyminen keskeytetään
             if (first_random == 0){
                 MotorDirLeft_Write(1);     
                 MotorDirRight_Write(0);    
@@ -237,6 +242,7 @@ int main()
                 }
             }
             //oikea käännös
+            // jos nähdään kohde kääntymisen aikana, kääntyminen keskeytetään
             else{
                 MotorDirLeft_Write(0);
                 MotorDirRight_Write(1);
