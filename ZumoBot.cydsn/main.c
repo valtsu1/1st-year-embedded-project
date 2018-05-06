@@ -63,20 +63,6 @@ void forward(uint8 speed,uint32 delay)
     CyDelay(delay);
 }
 
-//kalibrointipyörähdys
-int kalibrate(float left, float right) {
-    static int check = 0, fakeBoolean;
-    
-    if(left > 16000 && right > 16000) {
-        fakeBoolean = 1;
-    }
-    
-    if(fakeBoolean == 1 && left < 8000 && right < 8000) {
-        check++;
-    }
-    return check;
-}
-
 
 //mustien viivojen laskuri
 int lines(int left, int right) {
@@ -149,42 +135,31 @@ int main()
  }   
 #endif
 
+//sumorinki------------------------------------------------------------------------------------
 #if 0
-// button
-int main()
-{
-    CyGlobalIntEnable;
-    UART_1_Start();
-    Ultra_Start();                          // Ultra Sonic Start function
-    while(1) {
-        int d = Ultra_GetDistance();
-        //If you want to print out the value  
-        printf("distance = %d\r\n", d);
-        CyDelay(200);
-}
-}
-    
+    int main(){
+        UART_1_Start();
+        ADC_Battery_Start();
+        motor_start();
+        motor_forward(255,1000);
+    }
 #endif
-
-#if 0
+    
+#if 1
 int main()
 {
+    //käynnistetään kaikki tarvittava
     CyGlobalIntEnable;
     UART_1_Start();
     ADC_Battery_Start();
     motor_start();
     Systick_Start();
     srand(time(NULL)); 
-    //Ultra_Start();                          // Ultra Sonic Start function
-    //while(1) {
-        //int d = Ultra_GetDistance();
-        //If you want to print out the value  
-        //printf("distance = %d\r\n", d);
-        //CyDelay(200)
     struct sensors_ dig;
     int start = 0;
     reflectance_start();
     reflectance_set_threshold(14000,14000,14000,14000,14000,14000);
+    //robotti menee mustalle viivalle
      while(start != 1) {
         reflectance_digital(&dig);
         CyDelay(1);
@@ -193,7 +168,6 @@ int main()
             start = 1;
         }
     }
-    
     //viivalle ajanut robotti jää odottamaan kaukosäätimen aloituskomentoa
     motor_forward(0,100);
     IR_Start();
@@ -205,42 +179,47 @@ int main()
     for(;;){
         reflectance_digital(&dig);
         BatteryLed_Write(0);
+        // first_random on vasen/oikea käännös päätös
         int first_random = rand() % 2;
-        int second_random = rand() % 230 + 250;
+        //second_random on aika, jonka robotti kääntyy väliltä 250 - 499
+        int second_random = rand() % 250 + 250;
         int distance = Ultra_GetDistance();
-        
-        if (distance <= 15){
+        // etäisyystesti ledillä   
+        if (distance <= 20){
             BatteryLed_Write(1);
         }
-        
-        if ((distance <= 15 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
+        // jos robotti näkee mustaa tai näkee vihollisen 
+        if ((distance <= 20 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
             MotorDirRight_Write(0);
             motor_forward(255,2);
         }
+        // jos ei nähdä mitään peruutetaan ja valitaan käännös
         else{
-            motor_backward(255,170);
+            motor_backward(255,200);
                
            // vasen käännös
+           // jos nähdään kohde kääntymisen aikana, kääntyminen keskeytetään
             if (first_random == 0){
                 MotorDirLeft_Write(1);     
                 MotorDirRight_Write(0);    
                 for (int i = 0; i<20;i++){
                     motor_turn(255,255,second_random / 20);
                     distance = Ultra_GetDistance();
-                    if(distance <= 15){
+                    if(distance <= 20){
                         break;
                     }
                 }
             }
             //oikea käännös
+            // jos nähdään kohde kääntymisen aikana, kääntyminen keskeytetään
             else{
                 MotorDirLeft_Write(0);
                 MotorDirRight_Write(1);
                 for (int i = 0; i<20;i++){
                     motor_turn(255,255,second_random / 20);
                     distance = Ultra_GetDistance();
-                    if(distance <= 15){
+                    if(distance <= 20){
                         break;
                     }
                 }
@@ -252,6 +231,10 @@ int main()
 #endif
 
 
+<<<<<<< HEAD
+//viivaseuraus------------------------------------------------------------------------------------------------
+#if 1
+=======
 #if 0
 //IR receiver//
 int main()
@@ -284,8 +267,9 @@ int main()
  }   
 #endif
 
-#if 1
+#if 0
 //reflectance//
+>>>>>>> 1275c2aa6d98add61c03ea4c812c2593803f518d
 int main()
 {
     //koodipätkiä joita saatetaan tarvita testaamiseen
@@ -320,6 +304,7 @@ int main()
     float left1,left2,left3 = 0;
     float right1,right2,right3 = 0;
     
+    //käynnistetään robotin sensorit
     Systick_Start();
     motor_start();
     motor_forward(0,100);
@@ -354,7 +339,6 @@ int main()
             }
     }
     BatteryLed_Write(1);
-    CyDelay(1000);
     
     //kalibrointi loop
     for(;;) {
@@ -500,7 +484,7 @@ int main()
         
         
         //laskuri joka nousee yhdellä aina kun robotti menee mustan viivan yli
-        stop = lines(dig.l3, dig.r3);
+        stop = lines(left3, right3);
         
        
         //kolmannen viivan ylitettyään, robotti pysähtyy
@@ -560,100 +544,6 @@ int main()
         CyDelay(1);
     }
 }   
-#endif
-
-#if 0
-//reflectance//
-int main()
-{
-    struct sensors_ ref;
-    struct sensors_ dig;
-
-    Systick_Start();
-     motor_start();
-
-    CyGlobalIntEnable; 
-    UART_1_Start();
-  
-    reflectance_start();
-    reflectance_set_threshold(9000, 9000, 11000, 11000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
-    
-
-    for(;;)
-    {
-        // read raw sensor values
-        //reflectance_read(&ref);
-        //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);       // print out each period of reflectance sensors
-        
-        // read digital values that are based on threshold. 0 = white, 1 = black
-        // when blackness value is over threshold the sensors reads 1, otherwise 0
-        reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance period
-        //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);        //print out 0 or 1 according to results of reflectance period
-        
-        
-        //stop
-        if ((dig.l1 == 0 && dig.l2 == 0 && dig.l3 == 0 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0)){
-            forward(0,100);
-        }
-       //suoraan
-        else if((dig.l1 == 1 && dig.r1 == 1 && dig.l2 == 0 && dig.l3 == 0 && dig.r2 == 0 && dig.r3 == 0 )|| (dig.l1 == 1 && dig.r1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0) || (dig.r1 == 1 && dig.l1 == 0 && dig.r2 == 0 && dig.r3 == 0 && dig.l2 == 0 && dig.l3 == 0)) {
-            forward(220,5);
-        }
-        //jyrkkä vasen
-        else if(dig.l3 == 1) {
-                motor_turn(0,220,5);
-        }
-        
-        //jyrkkä oikea
-        else if(dig.r3 == 1) {
-            motor_turn(220,0,5);
-        }
-        
-        //vasemmalle
-       else if((dig.l2 == 1 && dig.l1 == 1 && dig.l3 == 0) || (dig.l2 == 1 && dig.l3 == 0 && dig.l1 == 0)) {
-            motor_turn(160,180,5);
-        }
-        
-        //oikealle
-        else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
-            motor_turn(180,160,5);
-        }
-        
-        
-        
-        
-    }
-}   
-#endif
-
-
-#if 0
-//motor//
-int main()
-{
-    CyGlobalIntEnable; 
-    UART_1_Start();
-    
-    CyDelay(1500);
-    
-    motor_start();
-
-    forward(255,1650);    
-    motor_turn(150,0,750);   
-    forward(255,1300); 
-    motor_turn(150,0,750);   
-    forward(255,1250);
-    motor_turn(150,0,750);
-    motor_turn(200,100,1800);
-    forward(255,450);
-           
-    motor_stop();               // motor stop
-    
-    for(;;)
-    {
-
-    }
-}
 #endif
 
 
