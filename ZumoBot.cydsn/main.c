@@ -489,13 +489,13 @@ int main()
         
        //loiva vasen
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(245,255,1);
+            motor_turn(245,255,3);
             suunta = 1;
         }
         
         //loiva oikea
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,245,1);
+            motor_turn(255,245,3);
             suunta = 2;
         } 
         CyDelay(1);
