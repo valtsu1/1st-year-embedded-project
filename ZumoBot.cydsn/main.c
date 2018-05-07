@@ -136,7 +136,7 @@ int main()
 #endif
 
 //sumorinki------------------------------------------------------------------------------------    
-#if 1
+#if 0
 int main()
 {
     //käynnistetään kaikki tarvittava
@@ -224,7 +224,7 @@ int main()
 
 
 //viivaseuraus------------------------------------------------------------------------------------------------
-#if 0
+#if 1
 int main()
 {
     //koodipätkiä joita saatetaan tarvita testaamiseen
@@ -293,7 +293,9 @@ int main()
                 break;
             }
     }
+    
     BatteryLed_Write(1);
+    CyDelay(1000);
     
     //kalibrointi loop
     for(;;) {
@@ -428,7 +430,6 @@ int main()
             right1+=dig.r1;
             right2+=dig.r2;
             right3+=dig.r3;
-            CyDelay(1);
         }
         
         left1 = avarage(left1);
