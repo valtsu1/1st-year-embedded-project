@@ -83,7 +83,7 @@ int lines(int left, int right) {
 
 //laskee keskiarvon kolmesta sensorin lukuarvosta
 int avarage(float avarage) {
-    if (avarage/3 >  0.6) {
+    if (avarage/3 > 0.6) {
         return 1;
     }
     else {
@@ -228,11 +228,11 @@ int main()
 int main()
 {
     //koodipätkiä joita saatetaan tarvita testaamiseen
-    //------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------
     //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);
     //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);
     //reflectance_set_threshold(15000,15000, 15000, 15000, 15000, 15000); 
-    //------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------
     
     struct sensors_ ref;
     struct sensors_ dig;
@@ -295,7 +295,7 @@ int main()
     }
     
     BatteryLed_Write(1);
-    CyDelay(1000);
+    CyDelay(100);
     
     //kalibrointi loop
     for(;;) {
