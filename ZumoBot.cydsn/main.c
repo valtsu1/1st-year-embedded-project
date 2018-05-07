@@ -181,13 +181,13 @@ int main()
         if (distance <= 20){
             BatteryLed_Write(1);
         }
-        // jos robotti näkee mustaa tai näkee vihollisen 
+        // jos robotti näkee valkoista tai näkee vihollisen 
         if ((distance <= 20 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
             MotorDirRight_Write(0);
             motor_forward(255,2);
         }
-        // jos ei nähdä mitään peruutetaan ja valitaan käännös
+        // jos näkee mustaa, peruutus ja valitaan käännös
         else{
             motor_backward(255,200);
                
