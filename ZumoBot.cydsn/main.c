@@ -135,10 +135,8 @@ int main()
  }   
 #endif
 
-//sumorinki------------------------------------------------------------------------------------
-
-    
-#if 1
+//sumorinki------------------------------------------------------------------------------------    
+#if 0
 int main()
 {
     //käynnistetään kaikki tarvittava
@@ -226,7 +224,7 @@ int main()
 
 
 //viivaseuraus------------------------------------------------------------------------------------------------
-#if 0
+#if 1
 int main()
 {
     //koodipätkiä joita saatetaan tarvita testaamiseen
@@ -295,7 +293,9 @@ int main()
                 break;
             }
     }
+    
     BatteryLed_Write(1);
+    CyDelay(1000);
     
     //kalibrointi loop
     for(;;) {
@@ -489,13 +489,13 @@ int main()
         
        //loiva vasen
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(245,255,1);
+            motor_turn(245,255,3);
             suunta = 1;
         }
         
         //loiva oikea
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,245,1);
+            motor_turn(255,245,3);
             suunta = 2;
         } 
         CyDelay(1);
