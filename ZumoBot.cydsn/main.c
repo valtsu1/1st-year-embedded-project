@@ -77,7 +77,6 @@ int kalibrate(float left, float right) {
     return check;
 }
 
-
 //mustien viivojen laskuri
 int lines(int left, int right) {
     static int check, fakeBoolean;
@@ -97,7 +96,7 @@ int lines(int left, int right) {
 
 //laskee keskiarvon kolmesta sensorin lukuarvosta
 int avarage(float avarage) {
-    if (avarage/3 >  0.6) {
+    if (avarage/3 > 0.6) {
         return 1;
     }
     else {
@@ -149,7 +148,9 @@ int main()
  }   
 #endif
 
+//sumorinki------------------------------------------------------------------------------------    
 #if 0
+<<<<<<< HEAD
 // ultraääni etäisyystesti
 int main()
 {
@@ -167,6 +168,8 @@ int main()
     
 //sumopaini
 #if 1
+=======
+>>>>>>> f4339822bad8a4d7e9b26df9453bd3402f773d87
 int main()
 {
     //käynnistetään kaikki tarvittava
@@ -209,13 +212,13 @@ int main()
         if (distance <= 20){
             BatteryLed_Write(1);
         }
-        // jos robotti näkee mustaa tai näkee vihollisen 
+        // jos robotti näkee valkoista tai näkee vihollisen 
         if ((distance <= 20 && dig.r3 == 0 && dig.l3 == 0)  || (dig.r3 == 0 && dig.l3 == 0)) {
             MotorDirLeft_Write(0);
             MotorDirRight_Write(0);
             motor_forward(255,2);
         }
-        // jos ei nähdä mitään peruutetaan ja valitaan käännös
+        // jos näkee mustaa, peruutus ja valitaan käännös
         else{
             motor_backward(255,200);
                
@@ -252,48 +255,22 @@ int main()
 #endif
 
 
-#if 0
-//IR receiver//
-int main()
-{
-    CyGlobalIntEnable; 
-    UART_1_Start();
-    IR_Start();
-    
-    uint32_t IR_val; 
-    
-    printf("\n\nIR test\n");
-    
-    IR_flush(); // clear IR receive buffer
-    printf("Buffer cleared\n");
-    
-    IR_wait(); // wait for IR command
-    printf("IR command received\n");
-    
-    // print received IR pulses and their lengths
-    for(;;)
-    {
-        if(IR_get(&IR_val)) {
-            int l = IR_val & IR_SIGNAL_MASK; // get pulse length
-            int b = 0;
-            if((IR_val & IR_SIGNAL_HIGH) != 0) b = 1; // get pulse state (0/1)
-            printf("%d %d\r\n",b, l);
-            //printf("%d %lu\r\n",IR_val & IR_SIGNAL_HIGH ? 1 : 0, (unsigned long) (IR_val & IR_SIGNAL_MASK));
-        }
-    }    
- }   
-#endif
 
+<<<<<<< HEAD
 #if 0
 //linefollow
+=======
+//viivaseuraus------------------------------------------------------------------------------------------------
+#if 1
+>>>>>>> f4339822bad8a4d7e9b26df9453bd3402f773d87
 int main()
 {
     //koodipätkiä joita saatetaan tarvita testaamiseen
-    //------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------
     //printf("%5d %5d %5d %5d %5d %5d \r\n", dig.l3, dig.l2, dig.l1, dig.r1, dig.r2, dig.r3);
     //printf("%5d %5d %5d %5d %5d %5d\r\n", ref.l3, ref.l2, ref.l1, ref.r1, ref.r2, ref.r3);
     //reflectance_set_threshold(15000,15000, 15000, 15000, 15000, 15000); 
-    //------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------
     
     struct sensors_ ref;
     struct sensors_ dig;
@@ -320,6 +297,7 @@ int main()
     float left1,left2,left3 = 0;
     float right1,right2,right3 = 0;
     
+    //käynnistetään robotin sensorit
     Systick_Start();
     motor_start();
     motor_forward(0,100);
@@ -353,8 +331,9 @@ int main()
                 break;
             }
     }
+    
     BatteryLed_Write(1);
-    CyDelay(1000);
+    CyDelay(100);
     
     //kalibrointi loop
     for(;;) {
@@ -498,7 +477,7 @@ int main()
         
         
         //laskuri joka nousee yhdellä aina kun robotti menee mustan viivan yli
-        stop = lines(dig.l3, dig.r3);
+        stop = lines(left3, right3);
         
        
         //kolmannen viivan ylitettyään, robotti pysähtyy
@@ -546,13 +525,13 @@ int main()
         
        //loiva vasen
        else if((left2 == 1 && left1 == 1 && left3 == 0) || (left2 == 1 && left3 == 0 && left1 == 0)) {
-            motor_turn(245,255,1);
+            motor_turn(245,255,3);
             suunta = 1;
         }
         
         //loiva oikea
         else if((right2 == 1 && right1 == 1 && right3 == 0) || (right2 == 1 && right1 == 0 && right3 == 0)) {
-            motor_turn(255,245,1);
+            motor_turn(255,245,3);
             suunta = 2;
         } 
         CyDelay(1);
@@ -560,6 +539,7 @@ int main()
 }   
 #endif
 
+<<<<<<< HEAD
 #if 0
 //reflectance//
 int main()
@@ -618,4 +598,7 @@ int main()
     }
 }   
 #endif
+=======
+
+>>>>>>> f4339822bad8a4d7e9b26df9453bd3402f773d87
 /* [] END OF FILE */
