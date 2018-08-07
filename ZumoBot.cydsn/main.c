@@ -108,7 +108,7 @@ int avarage(float avarage) {
 
 
 #if 0
-//battery level//
+//battery level testi//
 int main()
 {
     CyGlobalIntEnable; 
@@ -150,7 +150,7 @@ int main()
 #endif
 
 #if 0
-// button
+// ultraääni etäisyystesti
 int main()
 {
     CyGlobalIntEnable;
@@ -162,19 +162,10 @@ int main()
         printf("distance = %d\r\n", d);
         CyDelay(200);
 }
-}
-    
-#endif
-
-#if 0
-    int main(){
-        UART_1_Start();
-        ADC_Battery_Start();
-        motor_start();
-        motor_forward(255,1000);
-    }
+}   
 #endif
     
+//sumopaini
 #if 1
 int main()
 {
@@ -201,7 +192,7 @@ int main()
     //viivalle ajanut robotti jää odottamaan kaukosäätimen aloituskomentoa
     motor_forward(0,100);
     IR_Start();
-    Ultra_Start();                          // Ultra Sonic Start function
+    Ultra_Start();                          // Ultra Sanic Start function
     IR_flush();
     IR_wait();
     motor_forward(255,300);
@@ -294,7 +285,7 @@ int main()
 #endif
 
 #if 0
-//reflectance//
+//linefollow
 int main()
 {
     //koodipätkiä joita saatetaan tarvita testaamiseen
@@ -418,9 +409,7 @@ int main()
     
         
         //alustaa start muuttujan
-        start = 0;
-
-    
+        start = 0; 
         
             //laskee ja asettaa kalibroinnin tuloksen perusteella arvot sensoreille
             l1value = ((l1min + l1max) / 2);
@@ -586,8 +575,7 @@ int main()
   
     reflectance_start();
     reflectance_set_threshold(9000, 9000, 11000, 11000, 9000, 9000); // set center sensor threshold to 11000 and others to 9000
-    
-
+   
     for(;;)
     {
         // read raw sensor values
@@ -626,44 +614,8 @@ int main()
         //oikealle
         else if((dig.r2 == 1 && dig.r1 == 1 && dig.r3 == 0) || (dig.r2 == 1 && dig.r1 == 0 && dig.r3 == 0)) {
             motor_turn(180,160,5);
-        }
-        
-        
-        
-        
+        }  
     }
 }   
 #endif
-
-
-#if 0
-//motor//
-int main()
-{
-    CyGlobalIntEnable; 
-    UART_1_Start();
-    
-    CyDelay(1500);
-    
-    motor_start();
-
-    forward(255,1650);    
-    motor_turn(150,0,750);   
-    forward(255,1300); 
-    motor_turn(150,0,750);   
-    forward(255,1250);
-    motor_turn(150,0,750);
-    motor_turn(200,100,1800);
-    forward(255,450);
-           
-    motor_stop();               // motor stop
-    
-    for(;;)
-    {
-
-    }
-}
-#endif
-
-
 /* [] END OF FILE */
